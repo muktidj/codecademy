@@ -1,0 +1,47 @@
+Pengantar Iterators
+==================================
+Bayangkan Anda memiliki daftar belanjaan dan Anda ingin tahu apa setiap item dalam daftar itu. Anda harus memindai setiap baris dan memeriksa item. Tugas umum ini mirip dengan apa yang harus kita lakukan ketika kita ingin mengulangi, atau mengulangi, array. Satu alat yang kami miliki adalah forloop. Namun, kami juga memiliki akses ke metode larik bawaan yang membuat perulangan lebih mudah.
+
+Metode larik JavaScript bawaan yang membantu kita beralih disebut metode iterasi , kadang-kadang disebut sebagai iterator . Iterator adalah metode yang dipanggil pada array untuk memanipulasi elemen dan mengembalikan nilai.
+
+Dalam pelajaran ini, Anda akan mempelajari sintaksis untuk metode ini, nilai pengembaliannya, cara menggunakan dokumentasi untuk memahaminya, dan bagaimana memilih metode iterator yang tepat untuk tugas yang diberikan.
+
+## forEach()
+========================
+Metode iterasi pertama yang akan kita pelajari adalah .forEach(). Tepat namanya, .forEach()akan mengeksekusi kode yang sama untuk setiap elemen array.
+
+Cara lain untuk meneruskan panggilan balik .forEach()adalah dengan menggunakan sintaks fungsi panah.
+
+-----> groceries.forEach(groceryItem => console.log(groceryItem));
+
+Kami juga dapat mendefinisikan fungsi sebelumnya untuk digunakan sebagai fungsi panggilan balik.
+
+------> 
+function printGrocery(element){
+        console.log(element);
+        }
+        
+        groceries.forEach(printGrocery);
+
+Contoh di atas menggunakan deklarasi fungsi tetapi Anda juga bisa menggunakan ekspresi fungsi atau fungsi panah juga.
+
+Ketiga potongan kode melakukan hal yang sama. Dalam setiap metode iterasi array, kita bisa menggunakan salah satu dari tiga contoh untuk memasok fungsi panggilan balik sebagai argumen ke iterator. Ada baiknya untuk mengetahui berbagai cara untuk meneruskan fungsi panggilan balik sebagai argumen di iterator karena pengembang memiliki preferensi gaya yang berbeda. Meskipun demikian, karena adopsi ES6 yang kuat, kami akan menggunakan sintaks fungsi panah di latihan selanjutnya.
+
+## Metode .map ()
+=====================
+Iterator kedua yang akan kita bahas adalah .map(). Ketika .map()dipanggil pada array, dibutuhkan argumen fungsi callback dan mengembalikan array baru! Lihatlah contoh panggilan .map():
+
+----->
+const number = [1,2,3,4,5]
+const addNumber = number.map(numbers => numbers + 10)
+
+## Filter()
+=========================
+Metode iterator lain yang bermanfaat adalah .filter(). Seperti .map(), .filter()mengembalikan array baru. Namun, .filter()mengembalikan array elemen setelah memfilter elemen tertentu dari array asli. Fungsi panggilan balik untuk .filter()metode harus kembali trueatau falsetergantung pada elemen yang diteruskan ke sana. Elemen-elemen yang menyebabkan fungsi callback kembali trueditambahkan ke array baru. Lihatlah contoh berikut:
+
+ ----------->
+ const words = ['chair', 'music', 'pillow', 'brick', 'pen', 'door']; 
+
+const shortWords = words.filter(word => {
+  return word.length < 6;
+});

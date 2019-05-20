@@ -1,0 +1,79 @@
+Perkenalan
+=======================
+Kita sering tidak menyadari jumlah asumsi yang kita buat ketika kita berkomunikasi dengan orang lain dalam bahasa ibu kita. Jika kami mengatakan kepada Anda untuk "menghitung sampai tiga," kami akan mengharapkan Anda untuk mengatakan atau memikirkan angka satu, dua dan tiga. Kami berasumsi Anda akan mulai dengan "satu" dan diakhiri dengan "tiga". Dengan pemrograman, kita dihadapkan dengan kebutuhan untuk lebih eksplisit dengan arahan kita ke komputer. Inilah cara kami memberi tahu komputer untuk "menghitung sampai tiga":
+
+---> for (let i = 1; i<=3; i++) {
+ 	 console.log(i)
+	  }
+
+Ketika kita berbicara dengan manusia lain, kita berbagi kosakata yang memberi kita cara cepat untuk mengkomunikasikan konsep yang rumit. Ketika kita mengatakan "panggang", itu mengingatkan kita pada subrutin yang sudah dikenal — memanaskan oven terlebih dahulu, memasukkan sesuatu ke dalam oven selama jangka waktu tertentu, dan akhirnya mengeluarkannya. Ini memungkinkan kita untuk mengabstraksi banyak detail dan mengkomunikasikan konsep-konsep kunci secara lebih ringkas. Alih-alih mencantumkan semua detail itu, kita dapat mengatakan, "Kami membuat kue," dan tetap memberikan semua itu artinya bagi Anda.
+
+Dalam pemrograman, kita dapat mencapai "abstraksi" dengan menulis fungsi. Selain memungkinkan kami menggunakan kembali kode kami, fungsi membantu membuat program yang jelas dan mudah dibaca. Jika Anda temui countToThree()dalam suatu program, Anda mungkin dapat dengan cepat menebak fungsi apa yang dilakukan tanpa harus berhenti dan membaca tubuh fungsi.
+
+Kita juga akan belajar tentang cara lain untuk menambahkan tingkat abstraksi ke pemrograman kita: fungsi tingkat tinggi . Fungsi tingkat tinggi adalah fungsi yang menerima fungsi lain sebagai argumen dan / atau mengembalikan fungsi sebagai output. Ini memungkinkan kami membangun abstraksi di atas abstraksi lain, seperti "Kami menyelenggarakan pesta ulang tahun" adalah abstraksi yang dibangun di atas abstraksi "Kami membuat kue."
+
+Singkatnya, menggunakan lebih banyak abstraksi dalam kode kami memungkinkan kami untuk menulis lebih banyak kode modular yang lebih mudah dibaca dan didebug.
+
+## Function as Data
+==============================
+
+Fungsi JavaScript berperilaku seperti tipe data lainnya dalam bahasa; kita bisa menetapkan fungsi ke variabel, dan kita bisa menugaskannya ke variabel baru.
+
+Di bawah ini, kami memiliki nama fungsi panjang yang mengganggu yang mengganggu keterbacaan kode apa pun yang digunakannya. Mari kita berpura-pura fungsi ini melakukan pekerjaan penting dan perlu dipanggil berulang kali!
+
+--->  
+const announceThatIAmDoingImportantWork = () => {
+	  console.log("I’m doing very important work!");
+	   };
+
+Bagaimana jika kita ingin mengganti nama fungsi ini tanpa mengorbankan kode sumber? Kami dapat menetapkan ulang fungsi ke variabel dengan nama pendek yang sesuai:
+
+---> const busy = announceThatIAmDoingImportantWork;
+      busy(); // This function call barely takes any space!
+
+ busy adalah variabel yang menyimpan referensi ke fungsi asli kami. Jika kita bisa mencari alamat di memori busy dan alamat di memori announceThatIAmDoingImportantWork mereka akan menunjuk ke tempat yang sama. busy()Fungsi baru kami dapat dipanggil dengan tanda kurung seolah-olah itu adalah nama yang awalnya kami berikan fungsi kami.
+
+Perhatikan bagaimana kita menetapkan announceThatIAmDoingImportantWork tanpa tanda kurung sebagai nilai ke busy variabel. Kami ingin menetapkan nilai fungsi itu sendiri, bukan nilai yang dikembalikan ketika dipanggil.
+
+Dalam JavaScript, fungsi adalah objek kelas satu , artinya seperti objek lain yang Anda temui, fungsi JavaScript dapat memiliki properti dan metode.
+
+Karena fungsi adalah tipe objek, mereka memiliki properti seperti .length dan .name dan metode seperti .toString(). Anda dapat melihat lebih banyak tentang metode dan properti fungsi dalam dokumentasi .
+
+Fungsinya istimewa karena kita dapat memintanya, tetapi kita masih dapat memperlakukannya seperti tipe data lainnya. Mari kita berlatih melakukan itu!
+
+lihat functionAsData.js
+
+## Function As Parameter
+===============================
+Karena fungsi dapat berperilaku seperti tipe data lainnya dalam JavaScript, mungkin tidak mengejutkan Anda untuk mengetahui bahwa kami juga dapat melewatkan fungsi (ke fungsi lain) sebagai parameter. Fungsi tingkat tinggi adalah fungsi yang menerima fungsi sebagai parameter, mengembalikan fungsi, atau keduanya! Kami memanggil fungsi yang diteruskan sebagai parameter dan memanggil fungsi Call back karena dipanggil selama pelaksanaan fungsi tingkat tinggi.
+
+Saat kami meneruskan fungsi sebagai argumen ke fungsi lain, kami tidak memintanya. Meminta fungsi akan mengevaluasi nilai balik dari panggilan fungsi itu. Dengan panggilan balik, kami meneruskan fungsi itu sendiri dengan mengetikkan nama fungsi tanpa tanda kurung (yang akan mengevaluasi hasil memanggil fungsi
+
+-------> const timeFuncRuntime = funcParameter => {
+   let t1 = Date.now();
+   funcParameter();
+   let t2 = Date.now();
+   return t2 - t1;
+}
+
+const addOneToOne = () => 1 + 1;
+
+timeFuncRuntime(addOneToOne);
+
+Kami menulis fungsi tingkat tinggi timeFuncRuntime(),. Dibutuhkan fungsi sebagai argumen, menghemat waktu mulai, memanggil fungsi panggil balik, mencatat waktu setelah fungsi dipanggil, dan mengembalikan waktu yang dibutuhkan fungsi untuk menjalankan dengan mengurangi waktu mulai dari waktu berakhir.
+
+Fungsi tingkat tinggi ini dapat digunakan dengan fungsi panggilan balik yang menjadikannya bagian kode yang berpotensi kuat.
+
+Kami kemudian dipanggil timeFuncRuntime()pertama dengan addOneToOne() fungsi - perhatikan bagaimana kami melewati addOneToOne dan tidak memohonnya.
+
+---> timeFuncRuntime(() => {
+      for (let i = 10; i>0; i--){
+       console.log(i);
+        }
+      });
+
+Dalam contoh ini, kami dipanggil timeFuncRuntime()dengan fungsi anonim yang dihitung mundur dari 10. Fungsi anonim juga bisa menjadi argumen!
+
+Mari kita berlatih menggunakan fungsi dan menulis fungsi tingkat tinggi.
+
+lihat functionAsParameter.js
