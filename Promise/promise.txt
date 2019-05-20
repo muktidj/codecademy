@@ -1,0 +1,390 @@
+Introduction
+==
+
+Dalam pengembangan web, pemrograman asinkron terkenal karena menjadi topik yang menantang.
+
+Sebuah operasi asynchronous adalah salah satu yang memungkinkan komputer untuk "melanjutkan" untuk tugas-tugas lain sambil menunggu operasi asynchronous untuk menyelesaikan. Pemrograman asinkron berarti operasi yang menghabiskan waktu tidak harus menghentikan semua yang lain dalam program kami.
+
+Ada banyak contoh asinkronisitas dalam kehidupan kita sehari-hari. Membersihkan rumah kita, misalnya, melibatkan operasi tidak sinkron seperti pencuci piring mencuci piring kita atau mesin cuci mencuci pakaian kita. Sementara kita menunggu selesainya operasi-operasi itu, kita bebas melakukan tugas-tugas lain.
+
+Demikian pula, pengembangan web menggunakan operasi asinkron. Operasi seperti membuat permintaan jaringan atau meminta basis data bisa memakan waktu, tetapi JavaScript memungkinkan kita untuk melakukan tugas-tugas lain sambil menunggu penyelesaiannya.
+
+Pelajaran ini akan mengajarkan Anda bagaimana JavaScript modern menangani asynchronicity menggunakan Promise objek, yang diperkenalkan dengan ES6. Ayo mulai!
+
+What is a Promise
+=========
+
+Promise adalah objek yang mewakili hasil akhirnya dari operasi asinkron. Sebuah Promise objek dapat menjadi salah satu dari tiga states:
+
+-Pending : Keadaan awal— operasi belum selesai.
+
+-Fulfiled(terpenuhi) : Operasi telah selesai dengan sukses dan Promise sekarang memiliki nilai terselesaikan . Misalnya, Promise permintaan mungkin resolve(diselesaikan) dengan objek JSON sebagai nilainya.
+
+-rejected : Operasi gagal dan Promise memiliki alasan untuk kegagalan. Alasan ini biasanya Error semacam.
+
+Kami merujuk pada Promise yang telah resolve(diselesaikan) jika tidak lagi Pending — itu Fulfiled atau rejected. Mari kita pikirkan mesin pencuci piring sebagai states yang memiliki Promise:
+
+-Pending : Mesin pencuci piring sedang berjalan tetapi belum menyelesaikan siklus pencucian.
+
+-Terisi : Mesin pencuci piring telah menyelesaikan siklus mencuci dan penuh dengan piring bersih.
+
+-rejected : Pencuci piring menemui masalah (tidak menerima sabun!) Dan mengembalikan piring yang tidak bersih.
+
+Jika Promise pencuci piring kami fulfiled, kami akan dapat melakukan tugas terkait, seperti membongkar piring bersih dari mesin pencuci piring. Jika rejected, kita bisa mengambil langkah alternatif, seperti menjalankannya lagi dengan sabun atau mencuci piring dengan tangan.
+
+Semua Promise akhirnya resolve(diselesaikan), memungkinkan kita untuk menulis logika untuk apa yang harus dilakukan jika Promise itu fulfiled atau jika rejected.
+
+
+
+1. Constructing a Promise Object
+===================
+
+Let's create Promise kami menggunakan new kata kunci dan Promise metode konstruktor:
+
+const executorFunction = (resolve, reject) => { };
+const myFirstPromise = new Promise(executorFunction);
+
+The Promise metode konstruktor mengambil parameter fungsi disebut fungsi pelaksana yang berjalan secara otomatis ketika konstruktor disebut. Fungsi pelaksana umumnya memulai operasi asinkron dan menentukan bagaimana Promise harus resolve(diselesaikan).
+
+Fungsi pelaksana memiliki dua parameter fungsi, biasanya disebut sebagai resolve()dan reject()fungsi. Fungsi resolve() dan reject() tidak didefinisikan oleh programmer. Ketika Promis ekonstruktor berjalan, JavaScript akan melewati sendiri resolve() dan reject()fungsi ke fungsi pelaksana.
+
+-resolve adalah fungsi dengan satu argumen. Di bawah tenda, jika dipanggil, resolve() akan mengubah status Promise dari pending menjadi fulfilled, dan nilai terselesaikan Promise akan diatur ke argumen yang diteruskan resolve().
+
+-reject adalah fungsi yang mengambil alasan atau kesalahan sebagai argumen. Di bawah tenda, jika dipanggil, reject() akan mengubah status Promise dari pending menjadi rejected, dan alasan penolakan Promise akan diatur ke argumen yang diteruskan reject().
+
+
+Mari kita lihat contoh fungsi pelaksana di Promisekonstruktor:
+
+const executorFunction = (resolve, reject) => {
+  if (someCondition) {
+      resolve('I resolved!');
+  } else {
+      reject('I rejected!'); 
+  }
+}
+const myFirstPromise = new Promise(executorFunction);
+
+-Kami mendeklarasikan variabel myFirstPromise
+
+-myFirstPromise dibangun menggunakan new Promise() yang merupakan Promise metode konstruktor.
+
+-executorFunction() diteruskan ke konstruktor dan memiliki dua fungsi sebagai parameter: resolve dan reject.
+
+-Jika someCondition dievaluasi true, kami memohon resolve()dengan string'I resolved!'
+
+-Jika tidak, kami memohon reject() dengan string'I rejected!'
+
+
+Dalam contoh kami, myFirstPromise menyelesaikan atau menolak berdasarkan kondisi sederhana, tetapi, dalam praktiknya, Promise-Promise resolve(diselesaikan) berdasarkan hasil operasi asinkron. Misalnya, permintaan basis data dapat dipenuhi dengan data dari kueri atau reject dengan kesalahan yang dilemparkan. Dalam latihan ini, kami akan membuat Promise yang resolve(diselesaikan) secara serempak agar lebih mudah memahami cara kerjanya.
+
+
+The Node setTimeout() Function
+===============
+
+Mengetahui cara membangun Promise itu berguna, tetapi sebagian besar waktu, mengetahui cara mengonsumsi , atau menggunakan, Promise akan menjadi kunci. Dari pada membuat Promise, Anda akan menangani Promise objek yang dikembalikan kepada Anda sebagai hasil dari operasi yang tidak sinkron. Promise-Promise ini akan mulai tertunda tetapi akhirnya resolve(diselesaikan).
+
+Ke depan, kami akan mensimulasikan ini dengan memberi Anda fungsi yang mengembalikan Promise yang resolve(diselesaikan) setelah beberapa waktu. Untuk mencapai ini, kami akan menggunakan setTimeout(). setTimeout() adalah Node API yang menggunakan fungsi callback untuk menjadwalkan tugas yang harus dilakukan setelah penundaan. setTimeout() memiliki dua parameter: fungsi callback dan penundaan dalam milidetik.
+
+const delayedHello = () => {
+  console.log('Hi! This is an asynchronous greeting!');
+};
+
+setTimeout(delayedHello, 2000);
+
+
+Di sini, kami memohon setTimeout() dengan fungsi callback delayedHello() dan 2000. Paling tidak dua detik delayedHello() akan dipanggil. Tetapi mengapa "setidaknya" dua detik dan tidak tepat dua detik?
+
+Penundaan ini dilakukan secara tidak sinkron — program kami yang lain tidak akan berhenti mengeksekusi selama penundaan. JavaScript asinkron menggunakan sesuatu yang disebut event-loop . Setelah dua detik, delayedHello()ditambahkan ke baris kode yang menunggu untuk dijalankan. Sebelum dapat berjalan, kode sinkron apa pun dari program akan berjalan. Selanjutnya, kode apa pun di depannya di baris akan berjalan. Ini berarti mungkin lebih dari dua detik sebelum delayedHello() benar-benar dieksekusi.
+
+Mari kita lihat bagaimana kita akan menggunakan setTimeout()untuk membangun Promise asinkron:
+
+
+const returnPromiseFunction = () => {
+  return new Promise((resolve, reject) => {
+    setTimeout(( ) => {resolve('I resolved!')}, 1000);
+  });
+};
+
+const prom = returnPromiseFunction();
+
+
+Dalam kode contoh, kami meminta returnPromiseFunction()yang mengembalikan Promise. Kami menetapkan Promise itu ke variabel prom. Mirip dengan Promise asinkron yang mungkin Anda temui dalam produksi, prom awalnya akan memiliki status menunggu.
+
+Mari kita jelajahi setTimeout() lebih banyak.
+
+lihat di setTimeOut.js
+
+
+Consuming Promise
+==============
+
+Keadaan awal dari Promise yang tidak sinkron adalah pending, tetapi kami memiliki jaminan bahwa itu akan resolve(diselesaikan). Bagaimana kita memberi tahu komputer apa yang harus terjadi? Objek Promise datang dengan metode yang tepat .then(). Itu memungkinkan kita untuk mengatakan, "Aku punya Promise, ketika sudah beres, maka inilah yang ingin aku wujudkan ..."
+
+Dalam hal Promise pencuci piring kami, pencuci piring akan menjalankan kemudian :
+
+-Jika Promise kami reject, ini berarti kami memiliki piring kotor, dan kami akan menambahkan sabun dan menjalankan mesin cuci piring lagi.
+
+-Jika Promise kita dipenuhi, ini artinya kita memiliki piring bersih, dan kita akan menyingkirkannya.
+
+.then() adalah fungsi tingkat tinggi — dibutuhkan dua fungsi callback sebagai argumen. Kami menyebut callback ini sebagai handler . Ketika Promise itu selesai, pawang yang tepat akan dipanggil dengan nilai yang resolve(diselesaikan) itu.
+
+-handler pertama, kadang-kadang disebut onFulfilled, adalah handler yang sukses , dan harus berisi logika untuk penyelesaian Promise.
+
+-handler kedua, kadang-kadang disebut onRejected, adalah handler kegagalan , dan harus berisi logika untuk penolakan Promise.
+
+Kami dapat meminta .then()dengan satu, keduanya, atau tidak pawang! Ini memungkinkan fleksibilitas, tetapi juga bisa membuat proses debug sulit. Jika pawang yang tepat tidak disediakan, alih-alih melemparkan kesalahan, .then()hanya akan mengembalikan Promise dengan nilai menetap yang sama dengan Promise itu dipanggil. Salah satu fitur penting .then()adalah selalu memberikan Promise. Kami akan kembali ke ini secara lebih rinci dalam latihan selanjutnya dan mencari tahu mengapa itu sangat penting.
+
+
+Function onFulfilled and onRejected
+============================================
+
+Untuk menangani Promise "berhasil", atau Promise yang resolve(diselesaikan), kami memohon(invoke) .then() pada Promise itu, meneruskan fungsi callback handler yang berhasil:
+
+const prom = new Promise((resolve, reject) => {
+  resolve('Yay!');
+});
+
+const handleSuccess = (resolvedValue) => {
+  console.log(resolvedValue);
+};
+
+prom.then(handleSuccess); // Prints: 'Yay!'
+
+
+Mari kita uraikan apa yang terjadi dalam kode contoh:
+
+-prom adalah Promise yang akan resolve(diselesaikan)(resolve) 'Yay!'.
+
+-Kami mendefinisikan fungsi,, handleSuccess() yang mencetak argumen yang diteruskan ke sana.
+
+-Kami memohon(invoke) prom's .then() fungsi lewat di kami handleSuccess() fungsi.
+
+-Karena prom resolves, handleSuccess() dipanggil dengan prom nilai resolved 'Yay',, maka 'Yay'login ke konsol.
+
+
+
+Dengan konsumsi Promise yang khas, kita tidak akan tahu apakah Promise akan resolve(diselesaikan) atau reject(ditolak), jadi kita perlu memberikan logika untuk kedua kasus tersebut. Kami dapat mengirimkan onFulfilled dan kembali onRejected ke .then().
+
+let prom = new Promise((resolve, reject) => {
+  let num = Math.random();
+  if (num < .5 ){
+    resolve('Yay!');
+  } else {
+    reject('Ohhh noooo!');
+  }
+});
+
+const handleSuccess = (resolvedValue) => {
+  console.log(resolvedValue);
+};
+
+const handleFailure = (rejectionReason) => {
+  console.log(rejectionReason);
+};
+
+prom.then(handleSuccess, handleFailure);
+
+Mari kita uraikan apa yang terjadi dalam kode contoh:
+
+-prom adalah Promise yang secara acak akan resolve(diselesaikan) 'Yay!'atau reject(ditolak) bersama 'Ohhh noooo!'.
+
+-Kami melewati dua fungsi handler ke .then(). Yang pertama akan dipanggil dengan 'Yay!'jika Promise terselesaikan, dan yang kedua akan dipanggil dengan 'Ohhh noooo!'jika Promise itu reject.
+
+Mari kita menulis beberapa onFulfilled dan onRejectedfungsinya!
+lihat onFulfilledRejected.js
+
+
+Using catch() with Promises
+===========
+
+Salah satu cara untuk menulis kode bersih adalah dengan mengikuti prinsip yang disebut pemisahan(seperation of concerns) kepedulian . Pemisahan masalah berarti mengorganisasikan kode ke dalam bagian-bagian berbeda yang masing-masing menangani tugas tertentu. Ini memungkinkan kami untuk dengan cepat menavigasi kode kami dan tahu ke mana harus mencari jika ada sesuatu yang tidak berfungsi.
+
+Ingat, .then() akan mengembalikan Promise dengan nilai menetap yang sama dengan Promise itu dipanggil jika tidak ada penangan yang tepat diberikan. Implementasi ini memungkinkan kami untuk memisahkan logika yang diselesaikan dari logika yang ditolak. Alih-alih menyerahkan kedua penangan ke dalam satu .then(), kita dapat rantai yang kedua .then()dengan penangan yang gagal ke yang pertama .then()dengan penangan yang sukses dan kedua kasus akan ditangani.
+
+prom
+  .then((resolvedValue) => {
+    console.log(resolvedValue);
+  })
+  .then(null, (rejectionReason) => {
+    console.log(rejectionReason);
+  });
+
+Karena JavaScript tidak keberatan dengan whitespace, kami mengikuti konvensi umum untuk menempatkan setiap bagian dari rantai ini pada baris baru untuk membuatnya lebih mudah dibaca. Untuk membuat bahkan kode lebih mudah dibaca, kita dapat menggunakan fungsi Promise yang berbeda: .catch().
+
+The .catch() Fungsi hanya membutuhkan satu argumen, onRejected. Dalam hal Promise yang ditolak, penangan kegagalan ini akan dipanggil dengan alasan penolakan. Menggunakan .catch()mencapai hal yang sama seperti menggunakan .then()hanya dengan penangan kegagalan.
+
+Mari kita lihat contoh menggunakan .catch():
+
+prom
+  .then((resolvedValue) => {
+    console.log(resolvedValue);
+  })
+  .catch((rejectionReason) => {
+    console.log(rejectionReason);
+  });
+
+
+  Mari kita uraikan apa yang terjadi dalam kode contoh:
+
+-prom adalah Promise yang secara acak diputuskan 'Yay!'atau reject bersama 'Ohhh noooo!'.
+
+-Kami meneruskan penangan yang sukses ke .then() dan penangan yang gagal .catch().
+
+-Jika Promise terselesaikan, .then() penanganan sukses akan dipanggil dengan 'Yay!'.
+Jika Promise itu reject, .then() akan mengembalikan Promise dengan alasan penolakan yang sama seperti Promise awal dan .catch()penangan kegagalan akan dipanggil dengan alasan penolakan itu.
+
+Let's practice writing .catch() functions.
+
+lihat catch.js
+
+
+Chaining Multiple Promises
+=====================
+
+Satu pola umum yang akan kita lihat dengan pemrograman asinkron adalah beberapa operasi yang bergantung satu sama lain untuk dieksekusi atau yang harus dijalankan dalam urutan tertentu. Kami mungkin membuat satu permintaan ke database dan menggunakan data yang dikembalikan kepada kami untuk membuat permintaan lain dan seterusnya! Mari kita ilustrasikan ini dengan contoh pembersih lain, mencuci pakaian:
+
+Kami mengambil pakaian kotor kami dan menaruhnya di mesin cuci. Jika pakaian sudah dibersihkan, maka kita ingin memasukkannya ke dalam pengering. Setelah pengering berjalan, jika pakaian kering, maka kita bisa melipatnya dan menyimpannya.
+
+Proses perikatan(Chaining) Promise bersama ini disebut komposisi . Promise dirancang dengan komposisi dalam pikiran! Berikut adalah rantai Promise sederhana dalam kode:
+
+firstPromiseFunction()
+.then((firstResolveVal) => {
+  return 
+  secondPromiseFunction(firstResolveVal);
+})
+.then((secondResolveVal) => {
+  console.log(secondResolveVal);
+});
+
+Mari kita uraikan apa yang terjadi dalam contoh:
+
+-Kami memohon(invoke) fungsi firstPromiseFunction()yang mengembalikan Promise.
+
+-Kami memanggil .then() dengan fungsi anonim sebagai penangan sukses.
+
+-Di dalam pengendalian(handler) sukses, kami mengembalikan Promise baru — hasil dari memanggil fungsi kedua, secondPromiseFunction()dengan nilai yang diPromisekan Promise pertama.
+
+-Kami meminta yang kedua .then()untuk menangani logika penyelesaian yang kedua.
+
+-Di dalamnya .then(), kami memiliki penangan sukses yang akan mencatat nilai terselesaikan dariPromise kedua ke konsol.
+
+
+Avoiding Common Mistakes (menghindari kesalahan umum)
+==================
+
+Komposisi yang diPromisekan memungkinkan untuk kode yang lebih mudah dibaca dari pada sintaks panggilan balik bersarang yang mendahuluinya. Namun, masih mudah untuk melakukan kesalahan. Dalam latihan ini, kita akan membahas dua kesalahan umum dengan komposisi Promise.
+
+Kesalahan 1: nested promise alih-alih merantai mereka.
+
+returnsFirstPromise()
+.then((firstResolveVal) => {
+  return returnsSecondValue(firstResolveVal)
+    .then((secondResolveVal) => {
+      console.log(secondResolveVal);
+    })
+})
+
+
+Mari kita uraikan apa yang terjadi pada kode di atas:
+
+-Kami meminta returnsFirstPromise()yang mengembalikan promise.
+
+-Kami memohon .then()dengan penangan yang sukses.
+Di dalam handler sukses, kami memohon returnsSecondValue()dengan firstResolveValyang akan mengembalikan promise baru.
+
+-Kami meminta detik .then()untuk menangani logika untuk promise kedua menyelesaikan semua di dalam yang pertama then()!
+
+-Di dalam detik itu .then(), kami memiliki penangan sukses yang akan mencatat nilai terselesaikan dari promise kedua ke konsol.
+
+
+Alih-alih memiliki rantai promise yang bersih, kami menyarangkan logika untuk satu di dalam logika yang lain. Bayangkan jika kita menangani lima atau sepuluh promise!
+
+Kesalahan 2: Lupa return promise.
+
+returnsFirstPromise()
+.then((firstResolveVal) => {
+  returnsSecondValue(firstResolveVal)
+})
+.then((someVal) => {
+  console.log(someVal);
+})
+Mari kita uraikan apa yang terjadi dalam contoh:
+
+-Kami meminta returnsFirstPromise()yang mengembalikan promise.
+
+-Kami memohon .then()dengan penangan yang sukses.
+Di dalam pawang sukses, kami menciptakan promise kedua kami, tetapi kami lupa untuk returnitu!
+
+-Kami meminta sedetik .then(). Seharusnya menangani logika untuk promise kedua, tetapi karena kita tidak kembali, ini .then()dipanggil pada promise dengan nilai menetap yang sama dengan promise asli!
+
+-Karena lupa untuk mengembalikan promise kami tidak akan menghasilkan kesalahan, ini bisa menjadi hal yang sangat sulit untuk di-debug!
+
+
+Using Promise.all()
+==============
+
+Ketika dilakukan dengan benar, komposisi promise adalah cara yang bagus untuk menangani situasi di mana operasi asinkron bergantung satu sama lain atau urutan eksekusi penting. Bagaimana jika kita berhadapan dengan banyak promise, tetapi kita tidak peduli dengan pesanannya? Mari kita berpikir dalam hal membersihkan lagi.
+
+Agar kita menganggap rumah kita bersih, kita perlu pakaian kita kering, tempat sampah kita dikosongkan, dan mesin pencuci piring untuk berlari. Kita membutuhkan semua tugas ini untuk menyelesaikan tetapi tidak dalam urutan tertentu. Selain itu, karena mereka semua dilakukan secara tidak sinkron, mereka seharusnya benar-benar terjadi pada saat yang sama!
+
+Untuk memaksimalkan efisiensi, kita harus menggunakan konkurensi , beberapa operasi asinkron terjadi bersama-sama. Dengan Promise, kita bisa melakukan ini dengan fungsinya Promise.all().
+
+Promise.all()menerima berbagai Promise sebagai argumennya dan mengembalikan satu Promise. promise tunggal itu akan diselesaikan dalam satu dari dua cara:
+
+
+-Jika setiap Promise dalam array argumen terpecahkan, Promise tunggal yang dikembalikan dari Promise.all()akan menyelesaikan dengan array yang berisi nilai penyelesaian dari 
+setiap Promise dalam array argumen.
+
+-Jika ada Promise dari array argumen yang ditolak, Promise tunggal yang dikembalikan dari Promise.all()akan segera menolak dengan alasan bahwa Promise itu ditolak. Perilaku ini kadang-kadang disebut sebagai gagal puasa .
+
+
+let myPromises = Promise.all([returnsPromOne(), returnsPromTwo(), returnsPromThree()]);
+
+myPromises
+  .then((arrayOfValues) => {
+    console.log(arrayOfValues);
+  })
+  .catch((rejectionReason) => {
+    console.log(rejectionReason);
+  });
+
+
+  Mari kita uraikan apa yang terjadi:
+
+-Kami menyatakan myPromises ditugaskan untuk memohon Promise.all().
+
+-Kami memohon Promise.all()dengan tiga Promise - nilai yang dikembalikan dari fungsi.
+
+-Kami memohon .then()dengan penangan sukses yang akan mencetak array nilai yang diselesaikan jika setiap Promise berhasil diselesaikan.
+
+-Kami memohon .catch() dengan penangan kegagalan yang akan mencetak pesan penolakan pertama jika ada Promise yang ditolak.
+
+
+
+
+Kesimpulan
+========
+
+Ulasan
+Pekerjaan yang luar biasa! Promise adalah konsep yang sulit bahkan untuk pengembang berpengalaman, jadi tepuk diri Anda sendiri. Anda telah belajar banyak tentang JavaScript dan janji yang tidak sinkron. Mari kita ulas:
+
+Janji adalah objek JavaScript yang mewakili hasil akhirnya dari operasi asinkron.
+
+Janji bisa dalam salah satu dari tiga negara: tertunda, diselesaikan, atau ditolak.
+
+Sebuah janji diselesaikan jika itu diselesaikan atau ditolak.
+
+Kami membuat janji dengan menggunakan newkata kunci dan meneruskan fungsi pelaksana ke Promisemetode konstruktor.
+setTimeout() adalah fungsi Node yang menunda eksekusi fungsi callback menggunakan event-loop.
+
+Kami menggunakan .then()dengan panggilan balik penangan yang sukses yang mengandung logika untuk apa yang harus terjadi jika janji terselesaikan.
+
+Kami menggunakan .catch()dengan callback kegagalan penangan yang berisi logika untuk apa yang harus terjadi jika janji ditolak.
+
+Komposisi yang dijanjikan memungkinkan kita untuk menulis kode yang rumit dan asinkron yang masih dapat dibaca. Kami melakukan ini dengan merantai banyak .then()dan banyak .catch().
+
+Untuk menggunakan komposisi janji dengan benar, kita harus mengingat returnjanji - janji yang dibangun dalam a .then()
+.
+Kita harus mengaitkan banyak Promise daripada menumpuknya.
+
+Untuk memanfaatkan konkurensi, kita bisa menggunakan Promise.all().
