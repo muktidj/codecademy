@@ -1,0 +1,320 @@
+Hello Modules
+=====
+
+Modul JavaScript adalah potongan kode yang dapat digunakan kembali yang dapat diekspor dari satu program dan diimpor untuk digunakan dalam program lain.
+Modul sangat berguna karena sejumlah alasan. Dengan memisahkan kode dengan logika serupa ke file yang disebut modul, kita dapat:
+
+-temukan, perbaiki, dan kode debug lebih mudah;
+
+-menggunakan kembali dan mendaur ulang logika yang didefinisikan di berbagai bagian aplikasi kita;
+
+-merahasiakan informasi dan dilindungi dari modul lain;
+
+-dan, yang terpenting, mencegah polusi namespace global dan potensi tabrakan penamaan, dengan secara hati-hati memilih variabel dan perilaku yang kami muat ke dalam program.
+
+
+module.exports
+===========
+
+Kita dapat memulai dengan modul dengan mendefinisikan modul dalam satu file dan membuat modul tersedia untuk digunakan dalam file lain. Di bawah ini adalah contoh cara mendefinisikan modul dan cara mengekspornya menggunakan pernyataan module.exports.
+
+
+Di menu.js kita menulis:
+
+let Menu = {};
+Menu.specialty = "Roasted Beet Burger with Mint Sauce";
+
+module.exports = Menu;
+
+
+Mari kita pertimbangkan apa arti kode ini.
+
+1.let Menu = {};menciptakan objek yang mewakili modul Menu. Pernyataan itu berisi variabel huruf besar bernama Menu yang disetel sama dengan objek.
+
+2.Menu.specialty didefinisikan sebagai properti Menu modul. Kami menambahkan data ke Menu objek dengan menyetel properti pada objek itu dan memberikan nilai properti.
+
+3."Roasted Beet Burger with Mint Sauce";adalah nilai yang disimpan di Menu.specialty properti.
+
+4.module.exports = Menu; mengekspor Menu objek sebagai modul. module adalah variabel yang mewakili modul, dan exports memperlihatkan modul sebagai objek.
+
+Pola yang kami gunakan untuk mengekspor modul adalah sebagai berikut:
+
+1.Tentukan objek untuk mewakili modul.
+2.Tambahkan data atau perilaku ke modul.
+Ekspor modul.
+3.Mari kita buat modul pertama kami.
+
+
+Require()
+============
+
+Untuk memanfaatkan modul yang diekspor dan perilaku yang kami tentukan di dalamnya, kami mengimpor modul. Cara umum untuk melakukan ini adalah dengan require() fungsinya.
+
+Misalnya, kita ingin modul mengontrol data dan perilaku menu, dan kami ingin file terpisah untuk menangani penempatan pesanan. Kami akan membuat file order.js terpisah dan mengimpor Menu modul dari menu.js ke order.js menggunakan require():
+
+Dalam order.js kami akan menulis:
+
+const Menu = require('./menu.js');
+
+function placeOrder() {
+  console.log('My order is: ' + Menu.specialty);
+}
+
+placeOrder();
+
+Kami sekarang memiliki seluruh
+
+
+Kami sekarang memiliki seluruh perilaku yang Menu tersedia di order.js . Di sini, kami perhatikan:
+
+1.Dalam order.js kita mengimpor modul dengan membuat variabel dengan const dipanggil Menu dan mengaturnya sama dengan nilai require() fungsi. Kita dapat mengatur variabel ini ke nama variabel apa pun yang kita suka, seperti menuItems.
+
+2.require() adalah fungsi JavaScript yang memungkinkan modul memuat dengan memasukkan filepath modul sebagai parameter.
+
+3. './menu.js'adalah argumen yang kita berikan ke require() fungsi.
+
+4.The placeOrder() fungsi kemudian menggunakan Menu modul dalam definisi fungsinya. Dengan memanggil Menu.specialty, kami mengakses properti yang specialty ditentukan dalam Menu modul.
+Kami kemudian dapat memanggil fungsi menggunakan placeOrder()
+Melihat lebih dekat, pola untuk mengimpor modul adalah:
+
+Impor modul
+Gunakan modul dan propertinya dalam program.
+
+
+modul.exports II
+=============
+
+Kami juga dapat membungkus kumpulan data dan fungsi apa pun dalam suatu objek, dan mengekspornya menggunakan objek module.exports. Di menu.js , kita bisa menulis:
+
+let Menu = {};
+
+module.exports = {
+  specialty: "Roasted Beet Burger with Mint Sauce",
+  getSpecialty: function() {
+    return this.specialty;
+  } 
+};
+
+Dalam kode di atas, perhatikan:
+
+1.module.exports memperlihatkan modul saat ini sebagai objek.
+2.specialty dan getSpecialtyproperti pada objek.
+
+Kemudian di order.js , kita menulis:
+
+const Menu = require('./menu.js');
+
+console.log(Menu.getSpecialty());
+
+
+export default
+============
+
+Pada ES6, JavaScript telah menerapkan sintaksis baru yang lebih mudah dibaca dan fleksibel untuk mengekspor modul. Ini biasanya dipecah menjadi salah satu dari dua teknik, ekspor standar dan ekspor bernama .
+
+Kami akan mulai dengan sintaks pertama, ekspor default. Sintaks ekspor default berfungsi mirip dengan module.exports sintaks, memungkinkan kita untuk mengekspor satu modul per file.
+
+Mari kita lihat contoh di menu.js .
+
+let Menu = {};
+export default Menu;
+
+1.export default menggunakan export pernyataan JavaScript untuk mengekspor objek JavaScript, fungsi, dan tipe data primitif.
+
+2.Menu mengacu pada nama Menu objek, objek yang kita atur properti di dalam modul kita.
+
+
+Saat menggunakan sintaks ES6, kami menggunakan export defaultdi tempat module.exports.
+
+
+import
+=============
+
+Sintaks modul ES6 juga memperkenalkan import kata kunci untuk mengimpor objek. Dalam contoh order.js kami , kami mengimpor objek seperti ini:
+
+import Menu from './menu';
+
+1. Kata import kunci memulai pernyataan.
+2. Kata kunci di Menu ini menentukan nama variabel untuk menyimpan ekspor default.
+3. from menentukan dari mana memuat modul.
+
+4.'./menu'adalah nama modul yang akan dimuat. Saat berurusan dengan file lokal, ini secara khusus merujuk pada nama file tanpa ekstensi file.
+
+Kami kemudian dapat terus menggunakan Menu modul dalam file order.js .
+
+Named Exports
+================
+
+ES6 memperkenalkan pendekatan umum kedua untuk mengekspor modul. Selain ekspor default, ekspor bernama memungkinkan kita untuk mengekspor data melalui penggunaan variabel.
+
+Mari kita lihat bagaimana ini bekerja. Di menu.js kami akan memastikan untuk memberikan setiap bagian data nama variabel yang berbeda:
+
+let specialty = '';
+function isVegetarian() {
+
+}; 
+function isLowSodium() {
+
+}; 
+
+export { specialty, isVegetarian };
+
+
+1.Perhatikan bahwa, ketika kami menggunakan ekspor bernama, kami tidak menetapkan properti pada objek. Setiap ekspor disimpan dalam variabelnya sendiri.
+
+2.specialty adalah objek string, sementara isVegetarian dan isLowSodiuma dalah objek dalam bentuk fungsi. Ingatlah bahwa dalam JavaScript, setiap fungsi sebenarnya adalah objek fungsi.
+
+3.export { specialty, isVegetarian }; mengekspor objek dengan nama variabelnya. Perhatikan kata kunci export adalah awalan.
+specialty dan isVegetarian diekspor, sementara isLowSodium tidak diekspor, karena tidak ditentukan.
+
+
+Named Imports 
+===============
+
+Untuk mengimpor objek yang disimpan dalam variabel, kami menggunakan import kata kunci dan memasukkan variabel dalam satu set {}.
+
+Dalam file order.js , misalnya, kita akan menulis:
+
+
+import { specialty, isVegetarian } from './menu';
+
+console.log(specialty);
+
+
+1. Di sini specialtydan isVegetariandiimpor.
+2.Jika kami tidak ingin mengimpor salah satu dari variabel-variabel ini, kami dapat menghilangkannya dari import pernyataan.
+3. Kita kemudian dapat menggunakan objek-objek ini seperti di dalam kode kita. Sebagai contoh, kami akan menggunakan specialt ysebagai gantinya Menu.specialty.
+
+
+Export Named Exports
+=================
+
+
+Ekspor yang dinamai juga berbeda karena dapat diekspor segera setelah dideklarasikan, dengan menempatkan kata kunci export di depan deklarasi variabel.
+
+Di menu.js
+
+export let specialty = '';
+export function isVegetarian() {
+}; 
+function isLowSodium() {
+};
+
+
+-Kata export kunci memungkinkan kita untuk mengekspor objek setelah deklarasi, seperti yang ditunjukkan pada export let specialty dan export function isVegetarian() {}.
+
+-Kami tidak lagi memerlukan export pernyataan di bagian bawah file kami, karena perilaku ini ditangani di atas.
+
+
+Import Named Imports
+=====================
+
+Untuk mengimpor variabel yang dideklarasikan, kami cukup menggunakan sintaks asli yang menjelaskan nama variabel. Dengan kata lain, mengekspor pada saat deklarasi tidak berdampak pada bagaimana kita mengimpor variabel.
+
+import { specialty, isVegetarian } from 'menu';
+
+
+Export as
+=============
+
+Ekspor yang diberi nama juga dengan mudah menawarkan cara untuk mengubah nama variabel ketika kita mengekspor atau mengimpornya. Kita dapat melakukan ini dengan as kata kunci.
+
+Mari kita lihat bagaimana ini bekerja. Dalam contoh menu.js kami
+
+let specialty = '';
+let isVegetarian = function() {
+}; 
+let isLowSodium = function() {
+}; 
+
+export { specialty as chefsSpecial, isVegetarian as isVeg, isLowSodium };
+Pada contoh di atas,  lihat export pernyataan di bagian bawah file.
+
+-Kata as kunci memungkinkan kami untuk memberikan nama variabel alias seperti yang ditunjukkan pada specialty as chefsSpecial dan isVegetarian as isVeg.
+
+-Karena kami tidak memberikan isLowSodium alias, itu akan mempertahankan nama aslinya.
+
+
+import as
+===========
+
+Untuk mengimpor alias ekspor dengan askata kunci, kami menambahkan variabel alias dalam pernyataan impor kami.
+
+import { chefsSpecial, isVeg } from './menu';
+
+Dalam pesanan
+
+Kami mengimpor chefsSpecialdan isVeg dari Menu objek.
+Di sini, perhatikan bahwa kami memiliki opsi untuk alias objek yang sebelumnya tidak disebut ketika diekspor. Misalnya, isLowSodium objek yang kami ekspor dapat alias dengan as kata kunci saat diimpor: import {isLowSodium as saltFree} from 'Menu';
+
+
+Cara lain menggunakan alias adalah mengimpor seluruh modul sebagai alias:
+
+import * as Carte from './menu';
+
+Carte.chefsSpecial;
+Carte.isVeg();
+Carte.isLowSodium();
+
+
+
+-memungkinkan kita untuk mengimpor seluruh modul dari menu.js sebagai alias Carte.
+
+-Dalam contoh ini, nama apa pun yang kami ekspor akan tersedia bagi kami sebagai properti dari modul itu. Misalnya, jika kami mengekspor alias chefsSpecial dan isVeg, ini akan tersedia untuk kami. Jika kami tidak memberikan alias kepada isLowSodium, kami akan memanggilnya seperti yang didefinisikan pada Carte modul.
+
+
+Combining Export Statements
+=======================
+
+Kita juga dapat menggunakan ekspor bernama dan ekspor default bersama. Di menu.js :
+
+let specialty = '';
+function isVegetarian() {
+}; 
+function isLowSodium() {
+}; 
+function isGlutenFree() {
+};
+
+export { specialty as chefsSpecial, isVegetarian as isVeg };
+export default isGlutenFree;
+
+
+Di sini kami menggunakan kata kunci export untuk mengekspor ekspor yang disebutkan di bagian bawah file. Sementara itu, kami mengekspor isGlutenFree variabel menggunakan export default sintaks.
+
+Ini juga akan berfungsi jika kita mengekspor sebagian besar variabel seperti yang dideklarasikan dan mengekspor yang lain dengan export default sintaks.
+
+Meskipun lebih baik untuk menghindari menggabungkan dua metode ekspor, itu berguna kadang-kadang. Misalnya, jika Anda mencurigai pengembang mungkin hanya tertarik mengimpor fungsi tertentu dan tidak perlu mengimpor seluruh ekspor default.
+
+Combining Import Statments
+=======================
+
+Kami dapat mengimpor koleksi objek dan fungsi dengan data yang sama.
+
+Kami dapat menggunakan import kata kunci untuk mengimpor kedua jenis variabel seperti:
+
+import { specialty, isVegetarian, isLowSodium } from './menu';
+
+import GlutenFree from './menu';
+
+review
+========
+
+Kami baru belajar cara menggunakan modul JavaScript. Mari kita ulas apa yang kita pelajari:
+
+Modul dalam JavaScript adalah potongan kode yang dapat digunakan kembali yang dapat diekspor dari satu program dan diimpor untuk digunakan dalam program lain.
+
+-module.exports mengekspor modul untuk digunakan dalam program lain.
+
+-require() mengimpor modul untuk digunakan dalam program saat ini.
+
+
+ES6 memperkenalkan sintaks yang lebih fleksibel dan lebih mudah untuk mengekspor modul:
+
+-ekspor default digunakan export default untuk mengekspor objek JavaScript, fungsi, dan tipe data primitif.
+
+-ekspor name menggunakan export kata kunci untuk mengekspor data dalam variabel.
+
+-ekspor name  alias dengan as kata kunci.
+
+-import adalah kata kunci yang mengimpor objek, fungsi, atau tipe data apa pun.
