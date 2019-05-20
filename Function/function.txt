@@ -1,0 +1,40 @@
+Function
+====
+- sebuah sub program / sub routine yyang dapat dipanggil di bagian lain pada program
+
+-merupakan struktur dasar pembentuk dari js
+
+- disebut sebagai prosedur (kumpulan statment untuk ,melakukan tugas atau menghitung sebuah nilai)
+
+- untuk dapat menggunakan Function harus membuat terlebih dahulu function tersebut lalu memanggilnya
+
+- termasuk kedalam Firs-Class Object
+
+
+
+ Kenapa harus memakai Function
+===========
+- Reusability =penggunaan kembali (DRY: Do not Repeat Yourself), dari pada menulis berulang2 menggunakan function cukup tulis sekali bisa digunakan berulang-ulang
+
+-Dekomposisi / Abstraksi = menyembunyikan kompleksitas program yg kita buat
+
+-Modularitas
+
+
+Kategori Function
+==============
+1.Built-in Function
+  -Fungsi yg sudah disediakan js
+  -tinggal memanggilnya
+
+2. User defined function
+  -fungsi yang kita buat sendiri
+  -menggunakan keyword function
+  -nama function (optional)
+  -Parameter / Argument
+    +disimpan didalam ()
+    +boleh ada atau tidak, jika ada boleh lebih dari satu
+    +dipisahkan koma
+
+  -function body dibungkus dengan curly braces{}
+  -dapat mengembalikan nilai return

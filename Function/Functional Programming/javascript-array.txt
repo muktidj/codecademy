@@ -1,0 +1,29 @@
+Membuat Array tanpa loop di JS
+
+---->
+Array.apply(undefined, Array(4)).map(function(x,y) { 
+return y + 1
+})
+output: [1,2,3,4]
+
+---->
+menggunakan Es 6
+Array.apply(undefined, Array(8)).map((x,y) => y)
+
+output:[1,2,3,4,5,6,7,8]
+
+Dan jika urutannya adalah tentang kuadrat dari beberapa bilangan bulat pertama
+
+---->
+Array.apply(undefined, Array(3)).map(function (x, y) { 
+return (y + 1) * (y + 1); 
+});
+
+output : [1, 4, 9]
+
+Mencetak Alphabet A-Z
+-------->
+Array.apply(undefined, Array(26)).map(function(x,y) {
+  return String.fromCharCode(y + 65);
+}).join('');
+output: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'

@@ -1,0 +1,178 @@
+Apa fungsinya?
+Saat pertama kali mempelajari cara menghitung luas persegi panjang, ada urutan langkah untuk menghitung jawaban yang benar:
+
+Ukur lebar persegi panjang.
+Ukur tinggi persegi panjang.
+Lipat gandakan lebar dan tinggi persegi panjang.
+Dengan latihan, Anda dapat menghitung luas persegi panjang tanpa diperintahkan dengan tiga langkah ini setiap kali.
+
+Kita dapat menghitung luas satu persegi panjang dengan kode berikut:
+
+---> const width = 10;
+      const height = 6;
+      const area =  width * height;
+      console.log(area); // Output: 60
+
+
+
+----> // Area of the first rectangle
+const width1 = 10;
+const height1 = 6;
+const area1 =  width1 * height1;
+
+// Area of the second rectangle
+const width2 = 4;
+const height2 = 9;
+const area2 =  width2 * height2;
+
+// Area of the third rectangle
+const width3 = 10;
+const height3 = 10;
+const area3 =  width3 * height3;
+
+Dalam pemrograman, kami sering menggunakan kode untuk melakukan tugas tertentu beberapa kali. Alih-alih menulis ulang kode yang sama, kita dapat mengelompokkan blok kode bersama dan mengaitkannya dengan satu tugas, lalu kita dapat menggunakan kembali blok kode itu setiap kali kita perlu melakukan tugas lagi. Kami mencapainya dengan menciptakan fungsi . Fungsi adalah blok kode yang dapat digunakan kembali yang mengelompokkan urutan pernyataan untuk melakukan tugas tertentu.
+
+Dalam pelajaran ini, Anda akan belajar cara membuat dan menggunakan fungsi, dan bagaimana mereka dapat digunakan untuk membuat kode yang lebih jelas dan lebih ringkas.
+
+
+## Calling a Function
+=======================
+Seperti yang kita lihat di latihan sebelumnya, deklarasi fungsi mengikat fungsi ke pengenal.
+
+Namun, deklarasi fungsi tidak meminta kode di dalam fungsi tubuh untuk menjalankan, itu hanya menyatakan keberadaan fungsi. Kode di dalam fungsi menjalankan, atau mengeksekusi , hanya ketika fungsi dipanggil . Untuk memanggil fungsi dalam kode Anda, Anda mengetik nama fungsi diikuti dengan tanda kurung.
+
+##Parameters and Arguments
+===============================
+
+Sejauh ini, fungsi yang kami buat menjalankan tugas tanpa input. Namun, beberapa fungsi dapat mengambil input dan menggunakan input untuk melakukan tugas. Saat mendeklarasikan suatu fungsi, kita dapat menentukan parameternya . Parameter memungkinkan fungsi menerima input dan melakukan tugas menggunakan input. Kami menggunakan parameter sebagai pengganti untuk informasi yang akan diteruskan ke fungsi ketika dipanggil.
+
+---->  function sayThanks(name) {
+        console.log('Thank you for your purchase '+ name + '! We appreciate your business.');
+      }
+
+        sayThanks('Cole');
+
+
+## Default Parameters
+================================
+Salah satu fitur yang ditambahkan dalam ES6 adalah kemampuan untuk menggunakan parameter default . Parameter default memungkinkan parameter untuk memiliki nilai yang telah ditentukan jika tidak ada argumen yang dilewatkan ke dalam fungsi atau jika argumen tersebut undefined ketika dipanggil.
+
+Lihatlah potongan kode di bawah ini yang menggunakan parameter default:
+
+
+------->>  function greeting (name = 'stranger') {
+            console.log(`Hello, ${name}!`)
+          }
+
+          greeting('Nick') // Output: Hello, Nick!
+          greeting() // Output: Hello, stranger!
+
+- Pada contoh di atas, kami menggunakan = operator untuk menetapkan parameter name nilai default 'stranger'. Ini berguna jika Anda ingin menyertakan salam baku yang tidak dipersonalisasi!
+
+-Ketika kode panggilan greeting('Nick')nilai argumen dilewatkan dan 'Nick',, akan menimpa parameter default 'stranger'untuk masuk 'Hello, Nick!'ke konsol.
+
+-Ketika tidak ada argumen yang diteruskan greeting(), nilai default dari 'stranger'digunakan, dan 'Hello, stranger!'dicatat ke konsol.
+
+Dengan menggunakan parameter default, kami memperhitungkan situasi ketika argumen tidak diteruskan ke fungsi yang mengharapkan argumen.
+
+Mari kita berlatih membuat fungsi yang menggunakan parameter default.
+
+----------->
+function makeShoppingList(item1='milk', item2="bread", item3="eggs"){
+              console.log(`Remember to buy ${item1}`);
+              console.log(`Remember to buy ${item2}`);
+              console.log(`Remember to buy ${item3}`);
+            }
+
+            makeShoppingList()
+            makeShoppingList('Ayam','Daging','Sayuran')
+
+
+##Return
+========================
+Ketika suatu fungsi dipanggil, komputer akan menjalankan kode fungsi dan mengevaluasi hasil pemanggilan fungsi tersebut. Secara default nilai yang dihasilkan adalah undefined.
+
+------> function rectangleArea(width, height) {
+          let area = width * height 
+        }
+        console.log(rectangleArea(5, 7)) // Prints undefined
+
+Dalam contoh kode, kami mendefinisikan fungsi kami untuk menghitung parameter areaa width dan height. Kemudian rectangleArea()dipanggil dengan argumen 5dan 7. Tetapi ketika kami pergi untuk mencetak hasil yang kami dapatkan undefined. Apakah kita salah menulis fungsi kita? Tidak! Faktanya, fungsinya bekerja dengan baik, dan komputer menghitung area 35, tetapi kami tidak menangkapnya. Jadi bagaimana kita bisa melakukan itu? Dengan kata kunci return!
+
+Untuk meneruskan informasi dari panggilan fungsi, kami menggunakan pernyataan kembali. Untuk membuat pernyataan kembali, kami menggunakan returnkata kunci yang diikuti oleh nilai yang ingin kami kembalikan. Seperti yang kita lihat di atas, jika nilainya dihilangkan, undefined dikembalikan sebagai gantinya.
+
+Ketika return pernyataan digunakan di badan fungsi, eksekusi fungsi dihentikan dan kode yang mengikutinya tidak akan dieksekusi. Lihat contoh di bawah ini:
+
+-----> 
+function rectangleArea(width, height) {
+          if (width < 0 || height < 0) {
+            return 'You need positive integers to calculate area!';
+          }
+          return width * height;
+        }
+
+
+Jika argumen untuk width atau height kurang dari 0, maka rectangleArea() akan kembali 'You need positive integers to calculate area!'. Pernyataan pengembalian kedua width * height tidak akan berjalan.
+
+Kata return kunci sangat kuat karena memungkinkan fungsi untuk menghasilkan output. Kami kemudian dapat menyimpan output ke variabel untuk digunakan nanti.
+
+## Helper Functions
+=======================
+
+Kita juga bisa menggunakan nilai balik suatu fungsi di dalam fungsi lain. Fungsi-fungsi ini dipanggil dalam fungsi lain sering disebut sebagai fungsi pembantu . Karena setiap fungsi menjalankan tugas tertentu, itu membuat kode kami lebih mudah dibaca dan di-debug jika perlu.
+
+Jika kita ingin mendefinisikan fungsi yang mengubah suhu dari Celsius ke Fahrenheit, kita dapat menulis dua fungsi seperti:
+
+---> 
+function multiplyByNineFifths(number) {
+      return number * (9/5);
+    };
+
+    function getFahrenheit(celsius) {
+      return multiplyByNineFifths(celsius) + 32;
+    };
+
+    getFahrenheit(15); // Returns 59
+
+-getFahrenheit() dipanggil dan 15 diteruskan sebagai argumen.
+
+-Blok kode di dalam getFahrenheit() panggilan multiplyByNineFifths() dan diteruskan 15 sebagai argumen.
+
+-multiplyByNineFifths() mengambil argumen 15 untuk number parameter.
+
+-Blok kode di dalam multiplyByNineFifths() fungsi dikalikan 15 dengan (9/5), yang dievaluasi menjadi 27.
+
+-27 dikembalikan kembali ke pemanggilan fungsi getFahrenheit().
+
+-getFahrenheit() terus mengeksekusi. Ia menambahkan 32 untuk 27, yang mengevaluasi untuk 59.
+
+-Akhirnya, 59 dikembalikan lagi ke pemanggilan fungsi getFahrenheit(15).
+
+Kita dapat menggunakan fungsi untuk memisahkan sedikit logika atau tugas, lalu menggunakannya ketika kita perlu. Menulis fungsi pembantu dapat membantu mengambil tugas besar dan sulit dan memecahnya menjadi tugas yang lebih kecil dan lebih mudah dikelola
+
+
+## Fungsi Ekspresi
+====================
+Cara lain untuk mendefinisikan suatu fungsi adalah dengan menggunakan ekspresi fungsi . Untuk mendefinisikan fungsi di dalam ekspresi, kita dapat menggunakan function kata kunci. Dalam ekspresi fungsi, nama fungsi biasanya dihilangkan. Fungsi tanpa nama disebut fungsi anonim . Ekspresi fungsi sering disimpan dalam variabel untuk merujuknya.
+
+## Arrow Functions
+================================
+ES6 memperkenalkan sintaks fungsi panah , cara yang lebih pendek untuk menulis fungsi dengan menggunakan () =>notasi "panah gemuk" khusus .
+
+Fungsi panah menghapus kebutuhan untuk mengetikkan kata kunci function setiap kali Anda perlu membuat fungsi. Sebagai gantinya, Anda pertama-tama menyertakan parameter di dalam ( )dan kemudian menambahkan panah => yang menunjuk ke badan fungsi yang dikelilingi { }seperti ini:
+
+--->  const rectangleArea = (width, height) => {
+  let area = width * height;
+  return area
+}
+
+Penting untuk terbiasa dengan berbagai cara penulisan fungsi karena Anda akan menemukan masing-masingnya ketika membaca kode JavaScript lainnya.
+
+
+## Fungsi Panah Tubuh Ringkas
+=============================
+JavaScript juga menyediakan beberapa cara untuk memperbaiki sintaks fungsi panah. Bentuk fungsi yang paling kental dikenal sebagai tubuh ringkas . Kami akan mengeksplorasi beberapa teknik berikut ini:
+
+1.Fungsi-fungsi yang hanya menggunakan satu parameter tidak perlu parameter itu dimasukkan dalam tanda kurung. Namun, jika suatu fungsi mengambil nol atau beberapa parameter, tanda kurung diperlukan.
+
+2.Function body yang tersusun dari blok single-line tidak membutuhkan kurung kurawal. Tanpa kurung kurawal, apa pun yang dievaluasi garis itu akan secara otomatis dikembalikan. Isi blok harus segera mengikuti panah =>dan returnkata kunci dapat dihapus. Ini disebut sebagai pengembalian implisit .
