@@ -1,0 +1,276 @@
+Kata Kunci This
+=====================
+Objek adalah kumpulan data dan fungsi terkait. Kami menyimpan fungsi tersebut dalam metode pada objek kami
+
+const robot = {
+  model: '1E78V2',
+  energyLevel: 100,
+  provideInfo() {
+    return `I am ${this.model} and my current energy level is ${this.energyLevel}`
+  }
+};
+
+console.log(robot.provideInfo());
+
+Kata this kunci referensi objek panggilan yang menyediakan akses ke properti objek panggilan. Dalam contoh di atas, objek pemanggilan adalah robot dan dengan menggunakan this kita mengakses robot objek itu sendiri
+
+
+Arrow Functions and this = fungsi panah dan ini
+=======================
+Kami melihat dalam latihan sebelumnya bahwa untuk suatu metode, objek pemanggilan adalah objek yang menjadi milik metode. Jika kita menggunakan this kata kunci dalam suatu metode maka nilainya this adalah objek panggilan. Namun, itu menjadi sedikit lebih rumit ketika kita mulai menggunakan fungsi panah untuk metode. Lihatlah contoh di bawah ini:
+
+const goat = {
+  dietType: 'herbivore',
+  makeSound() {
+    console.log('baaa');
+  },
+  diet: () => {
+    console.log(this.dietType);
+  }
+};
+
+goat.diet(); // Prints undefined
+
+Dalam komentar, Anda dapat melihat yang goat.diet() akan masuk undefined. Jadi apa yang terjadi? Perhatikan bahwa dalam .diet() didefinisikan menggunakan fungsi panah.
+
+Fungsi panah secara inheren mengikat , atau mengikat, nilai yang sudah ditetapkan this ke fungsi itu sendiri yang BUKAN objek panggilan. Dalam potongan kode di atas, nilai this adalah obyek global , atau benda yang ada di lingkup global, yang tidak memiliki dietType properti dan oleh karena itu kembali undefined.
+
+
+const robot = {
+  energyLevel: 100,
+  checkEnergy(){
+    console.log(`Energy is currently at ${this.energyLevel}%.`)
+  }
+}
+
+robot.checkEnergy();
+
+gunakan seperti ini atau checkEnergy: function() {}
+
+
+privacy
+======================
+
+Mengakses dan memperbarui properti sangat penting dalam bekerja dengan objek. Namun, ada beberapa kasus di mana kita tidak ingin kode lain hanya mengakses dan memperbarui properti objek. Ketika membahas privasi dalam objek, kami mendefinisikannya sebagai gagasan bahwa hanya properti tertentu yang dapat berubah atau mampu mengubah nilainya.
+
+Bahasa tertentu memiliki privasi built-in untuk objek, tetapi JavaScript tidak memiliki fitur ini. Sebaliknya, pengembang JavaScript mengikuti konvensi penamaan yang memberi sinyal kepada pengembang lain cara berinteraksi dengan properti. Salah satu konvensi umum adalah menempatkan garis bawah _sebelum nama properti berarti bahwa properti tidak boleh diubah. Berikut ini contoh penggunaan _untuk menambahkan properti.
+
+const bankAccount = {
+  _amount: 1000
+}
+
+Dalam contoh di atas, _amount ini tidak dimaksudkan untuk dimanipulasi secara langsung.
+
+Meski begitu, masih mungkin untuk menetapkan kembali _amount:
+
+bankAccount._amount = 1000000;
+
+
+Getters
+=====================
+Getters adalah metode yang mendapatkan dan mengembalikan sifat internal suatu objek. Tetapi mereka dapat melakukan lebih dari sekedar mengambil nilai properti! Mari kita lihat metode pengambil:
+
+const person = {
+  _firstName: 'John',
+  _lastName: 'Doe',
+  get fullName() {
+    if (this._firstName && this._lastName){
+      return `${this._firstName} ${this._lastName}`;
+    } else {
+      return 'Missing a first name or a last name.';
+    }
+  }
+}
+
+// To call the getter method: 
+person.fullName; // 'John Doe'
+
+Perhatikan bahwa dalam metode pengambil di atas:
+
+-Kami menggunakan get kata kunci yang diikuti oleh fungsi.
+
+-Kami menggunakan if...else kondisional untuk memeriksa apakah keduanya _firstName dan _lastName ada (dengan memastikan keduanya mengembalikan nilai-nilai kebenaran) dan kemudian mengembalikan nilai yang berbeda tergantung pada hasilnya.
+
+-Kita dapat mengakses properti internal objek pemanggilan menggunakan this. Di fullName, kami mengakses keduanya this._firstName dan this._lastName.
+
+-Di baris terakhir yang kita sebut fullName di person. Secara umum, metode pengambil tidak perlu dipanggil dengan satu set tanda kurung. Secara sintaksis, sepertinya kami mengakses properti.
+
+
+Sekarang setelah kita membahas sintaksis, mari kita bahas beberapa keuntungan penting menggunakan metode pengambil
+
+
+-Getters dapat melakukan tindakan pada data saat mendapatkan properti.
+-Getters dapat mengembalikan nilai yang berbeda menggunakan conditional.
+-Dalam pengambil, kita dapat mengakses properti dari objek panggilan menggunakan this.
+-Fungsionalitas kode kami lebih mudah untuk dipahami oleh pengembang lain.
+
+
+Setter
+================
+
+Bersama dengan metode pengambil, kita juga dapat membuat metode penyetel yang menetapkan kembali nilai properti yang ada dalam suatu objek. Mari kita lihat contoh metode penyetel:
+
+const person = {
+  _age: 37,
+  set age(newAge){
+    if (typeof newAge === 'number'){
+      this._age = newAge;
+    } else {
+      console.log('You must assign a number to age');
+    }
+  }
+};
+
+Perhatikan bahwa pada contoh di atas:
+
+-Kita dapat melakukan pemeriksaan untuk nilai apa yang ditugaskan this._age.
+
+-Saat kami menggunakan metode penyetel, hanya nilai yang merupakan angka yang akan ditetapkan ulang this._age
+
+-Ada output yang berbeda tergantung pada nilai apa yang digunakan untuk menetapkan ulang this._age.
+
+
+Kemudian untuk menggunakan metode setter:
+
+person.age = 40;
+console.log(person._age); // Logs: 40
+person.age = '40'; // Logs: You must assign a number to age
+
+Metode Setter seperti age tidak perlu dipanggil dengan satu set tanda kurung. Secara sintaksis, sepertinya kami menetapkan ulang nilai properti.
+
+Seperti metode pengambil, ada keuntungan serupa untuk menggunakan metode setter yang termasuk memeriksa input, melakukan tindakan pada properti, dan menampilkan niat yang jelas untuk bagaimana objek seharusnya digunakan. Meskipun demikian, bahkan dengan metode setter, masih mungkin untuk secara langsung menetapkan kembali properti. Misalnya, pada contoh di atas, kita masih dapat mengatur ._age secara langsung:
+
+person._age = 'forty-five'
+console.log(person._age); // Prints forty-five
+
+
+Factory Function
+==========================
+
+Sejauh ini kita telah membuat objek secara individual, tetapi ada saat-saat di mana kita ingin membuat banyak contoh objek dengan cepat. Di sinilah fungsi pabrik masuk. Pabrik dunia nyata memproduksi banyak salinan dari suatu barang dengan cepat dan dalam skala besar. Fungsi pabrik adalah fungsi yang mengembalikan objek dan dapat digunakan kembali untuk membuat objek beberapa contoh. Fungsi pabrik juga dapat memiliki parameter yang memungkinkan kita untuk menyesuaikan objek yang dikembalikan.
+
+Katakanlah kita ingin membuat objek untuk mewakili monster dalam JavaScript. Ada banyak jenis monster dan kita bisa membuat setiap monster secara terpisah tetapi kita juga dapat menggunakan fungsi pabrik untuk membuat hidup kita lebih mudah. Untuk mencapai rencana jahat ini menciptakan beberapa objek monster, kita dapat menggunakan fungsi pabrik yang memiliki parameter:
+
+
+const monsterFactory = (name, age, energySource, catchPhrase) => {
+  return { 
+    name: name,
+    age: age, 
+    energySource: energySource,
+    scare() {
+      console.log(catchPhrase);
+    } 
+  }
+};
+
+
+Dalam monsterFactoryfungsi di atas, memiliki empat parameter dan mengembalikan sebuah objek yang memiliki sifat-sifat: name, age, energySource, dan scare(). Untuk membuat objek yang mewakili monster tertentu seperti hantu, kita dapat memanggil monsterFactorydengan argumen yang diperlukan dan menetapkan nilai kembalian ke variabel:
+
+const ghost = monsterFactory('Ghouly', 251, 'ectoplasm', 'BOO!');
+ghost.scare(); // 'BOO!'
+
+
+Sekarang kita memiliki ghost objek sebagai hasil panggilan monsterFactory() dengan argumen yang diperlukan. Dengan monsterFactory di tempat, kita tidak harus membuat objek secara harfiah setiap kali kita membutuhkan monster baru. Sebagai gantinya, kita dapat menjalankan monsterFactoryfungsi dengan argumen yang diperlukan mengambil alih dunia membuat monster untuk kita!
+
+
+Property Value Shorthand
+===============================
+
+ES6 memperkenalkan beberapa cara pintas baru untuk menetapkan properti ke variabel yang dikenal sebagai DESTRUCTURING .
+
+Dalam latihan sebelumnya, kami membuat fungsi pabrik yang membantu kami membuat objek. Kami harus menetapkan setiap properti kunci dan nilai meskipun nama kuncinya sama dengan nama parameter yang kami tetapkan. Untuk mengingatkan diri kita, inilah versi fungsi pabrik yang terpotong:
+
+const monsterFactory = (name, age, energySource, catchPhrase) => {
+  return { 
+    name: name,
+    age: age, 
+    energySource: energySource,
+    scare() {
+      console.log(catchPhrase);
+    } 
+  }
+};
+
+Bayangkan jika kita harus memasukkan lebih banyak properti, proses itu akan cepat menjadi membosankan! Tapi kita bisa menggunakan teknik perusakan, yang disebut singkatan nilai properti , untuk menyelamatkan diri kita sendiri beberapa keystrokes. Contoh di bawah ini berfungsi persis seperti contoh di atas:
+
+const monsterFactory = (name, age, energySource, catchPhrase) => {
+  return { 
+    name,
+    age,
+
+
+Destructured Assignment
+================
+
+Kita sering ingin mengekstrak pasangan nilai-kunci dari objek dan menyimpannya sebagai properti. Ambil contoh objek berikut:
+
+const vampire = {
+  name: 'Dracula',
+  residence: 'Transylvania',
+  preferences: {
+    day: 'stay inside',
+    night: 'satisfy appetite'
+  }
+};
+
+Jika kita ingin mengekstrak residence properti sebagai variabel, kita bisa menggunakan kode berikut:
+
+
+const residence = vampire.residence; 
+console.log(residence); // Prints 'Transylvania'
+
+
+Namun, kami juga dapat mengambil keuntungan dari teknik destructuring yang disebut tugas destructured untuk menyelamatkan diri beberapa penekanan tombol. Dalam penugasan yang dirusakkan, kita membuat variabel dengan nama kunci objek yang dibungkus kurung kurawal { }dan menetapkannya ke objek. Lihatlah contoh di bawah ini:
+
+
+const { residence } = vampire; 
+console.log(residence); // Prints 'Transylvania'
+
+
+Lihatlah kembali vampire properti objek dalam contoh kode pertama. Kemudian, pada contoh di atas, kami mendeklarasikan variabel baru residence yang mengekstrak nilai residence properti vampire. Saat kami mencatat nilai residenceke konsol, 'Transylvania' dicetak.
+
+Kami bahkan dapat menggunakan penugasan yang dirusak untuk mengambil properti bersarang dari suatu objek:
+
+const { day } = vampire.preferences; 
+console.log(day); // Prints 'stay inside'
+
+
+Built-in Method
+===========================
+
+Dalam latihan sebelumnya, kami telah membuat contoh objek yang memiliki metode mereka sendiri. Namun, kami juga dapat memanfaatkan metode bawaan untuk Objek!
+
+Sebagai contoh, kita memiliki akses ke objek metode instan seperti: .hasOwnProperty(), .valueOf(), dan banyak lagi! Berlatih keterampilan membaca dokumentasi Anda dan periksa: dokumentasi objek contoh MDN .
+
+Ada juga metode kelas Object berguna seperti Object.assign(), Object.entries(), dan Object.keys()hanya untuk beberapa nama. Untuk daftar lengkap, ramban: dokumentasi objek contoh MDN .
+
+Mari berkenalan dengan beberapa metode dan dokumentasi mereka.
+
+Catatan: Anda akan melihat kesalahan saat Anda bekerja melalui latihan ini, tetapi pada akhirnya kesalahan akan diperbaiki!
+
+
+Review
+===============
+
+Selamat telah menyelesaikan Advanced Objects!
+
+Mari kita tinjau konsep-konsep yang tercakup dalam pelajaran ini:
+
+-Objek yang dimiliki oleh suatu metode disebut objek panggilan .
+
+-Kata this kunci merujuk objek panggilan dan dapat digunakan untuk mengakses properti objek panggilan.
+
+-Metode tidak secara otomatis memiliki akses ke properti internal lainnya dari objek panggilan.
+
+-Nilai this tergantung pada tempat this diaksesnya.
+- Kita tidak dapat menggunakan fungsi panah sebagai metode jika kita ingin mengakses properti internal lainnya.
+
+-Objek JavaScript tidak memiliki privasi internal, melainkan ada konvensi yang harus diikuti untuk memberi tahu pengembang lain tentang maksud kode tersebut. Penggunaan tanda garis bawah sebelum nama properti berarti pengembang asli tidak bermaksud agar properti itu diubah secara langsung.
+
+-Metode penyetel dan pengambil memungkinkan cara yang lebih detail untuk mengakses dan menetapkan properti.
+
+-Fungsi pabrik memungkinkan kami membuat instance objek dengan cepat dan berulang-ulang.
+
+-Ada berbagai cara untuk menggunakan perusakan objek: salah satu cara adalah singkatan nilai properti dan yang lainnya adalah penugasan yang didestrukturisasi.
+
+-Seperti halnya konsep apa pun, itu adalah keterampilan yang baik untuk belajar bagaimana menggunakan dokumentasi dengan objek!

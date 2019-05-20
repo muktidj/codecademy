@@ -1,0 +1,264 @@
+Object
+
+Creating Object Literal
+========
+objek memiliki dua sifat Fuel Type dan color.
+let car = {
+'fuel type': 'premium'
+color	   : 'red'
+} 
+
+'Fuel Type'memiliki tanda kutip 
+karena mengandung karakter spasi.
+
+Mengakses Properti
+===========
+ada 2 cara mengakses Properti 
+1. menggunakan dot(.) contoh :
+	let spaceship = {
+	  homePlanet: 'Earth',
+	  color: 'silver',
+	  'Fuel Type': 'Turbo Fuel',
+	  numCrew: 5,
+	  flightPath: ['Venus', 'Mars', 'Saturn']
+	};
+
+// Write your code below
+let crewCount = spaceship.numCrew;
+let planetArray = spaceship.flightPath;
+
+2. Menggunakan Bracket Notation []
+	let spaceship = {
+	  'Fuel Type' : 'Turbo Fuel',
+	  'Active Mission' : true,
+	   homePlanet : 'Earth', 
+	   numCrew: 5
+	 };
+
+let propName =  'Active Mission';
+
+// Write your code below
+
+let isActive = spaceship['Active Mission'];
+
+console.log(spaceship[propName]);
+
+Kita harus menggunakan notasi braket ketika mengakses kunci yang memiliki angka, spasi, atau karakter khusus di dalamnya. Tanpa notasi braket dalam situasi ini, kode kami akan menimbulkan kesalahan. Dengan notasi braket Anda juga dapat menggunakan variabel di dalam tanda kurung untuk memilih kunci suatu objek. Ini dapat sangat membantu ketika bekerja dengan fungsi:
+
+
+Penetapan/Assigment Properti
+==================
+
+Objek bisa berubah makna, kita bisa memperbaruinya setelah kita membuatnya! 
+Kita dapat menggunakan notasi titik .,, atau notasi braket [],, dan
+ operator penugasan, =
+Salah satu dari dua hal dapat terjadi dengan penugasan properti:
+
+-Jika properti sudah ada di objek, nilai apa pun yang dimiliki sebelumnya akan diganti dengan nilai yang baru ditetapkan.
+-Jika tidak ada properti dengan nama itu, properti baru akan ditambahkan ke objek.
+
+Anda dapat menghapus properti dari objek dengan delete operator.
+
+let spaceship = {
+  'Fuel Type' : 'Turbo Fuel',
+  homePlanet : 'Earth',
+  color: 'silver',
+  'Secret Mission' : 'Discover life outside of Earth.'
+};
+
+// Write your code below
+spaceship.color = 'glorious gold';
+spaceship.numEngines = 5;
+delete spaceship['Secret Mission'];
+
+
+Method
+========
+let retreatMessage = 'We no longer wish to conquer your planet. It is full of dogs, which we do not care for.';
+
+// Write your code below
+let alienShip = {
+  retreat () {
+    console.log(retreatMessage)
+  },
+  takeOff() {
+    console.log('Spim... Borp... Glix... Blastoff!')
+  }
+};
+
+console.log(alienShip.retreat());
+console.log(alienShip.takeOff());
+
+
+Ketika data yang disimpan pada suatu objek adalah fungsi yang kita sebut metode . Properti adalah apa yang dimiliki objek, sedangkan metode adalah apa yang dilakukan objek.
+
+const alienShip = {
+  invade: function () { 
+    console.log('Hello! We have come to dominate your planet. Instead of Earth, it shall be called New Xaculon.')
+  }
+};
+
+Dengan sintaks metode baru yang diperkenalkan di ES6 kita dapat menghilangkan tanda titik dua dan functionkata kunci.
+
+const alienShip = {
+  invade () { 
+    console.log('Hello! We have come to dominate your planet. Instead of Earth, it shall be called New Xaculon.')
+  }
+};
+
+nested Object
+==========================================
+Dalam kode aplikasi, objek sering disarangkan — objek mungkin memiliki objek lain sebagai properti yang pada gilirannya dapat memiliki properti yang merupakan larik lebih banyak objek!
+
+
+let spaceship = {
+  passengers: [{name: 'Space Dog'}], 
+  telescope: {
+    yearBuilt: 2018,
+    model: "91031-XLT",
+    focalLength: 2032 
+  },
+  crew: {
+    captain: { 
+      name: 'Sandra', 
+      degree: 'Computer Engineering', 
+      encourageTeam() { console.log('We got this!') },
+     'favorite foods': ['cookies', 'cakes', 'candy', 'spinach'] }
+  },
+  engine: {
+    model: "Nimbus2000"
+  },
+  nanoelectronics: {
+    computer: {
+      terabytes: 100,
+      monitors: "HD"
+    },
+    backup: {
+      battery: "Lithium",
+      terabytes: 50
+    }
+  }
+}; 
+Kami dapat menghubungkan operator untuk mengakses properti yang bersarang. Kita harus memperhatikan operator mana yang masuk akal untuk digunakan di setiap lapisan. Akan sangat membantu jika Anda berpura-pura menjadi komputer dan mengevaluasi setiap ekspresi dari kiri ke kanan sehingga setiap operasi mulai terasa lebih mudah dikelola.
+
+let capFave = spaceship.crew.captain['favorite foods'][0];
+
+let firstPassenger = spaceship.passengers[0];
+
+
+pass by reference 
+======================
+
+Objek dilewatkan oleh referensi . Ini berarti ketika kita melewati variabel yang ditugaskan ke suatu objek ke dalam fungsi sebagai argumen, komputer menafsirkan nama parameter sebagai menunjuk ke ruang di memori memegang objek itu. Akibatnya, fungsi yang mengubah properti objek sebenarnya bermutasi objek secara permanen (bahkan ketika objek ditugaskan ke constvariabel).
+
+const spaceship = {
+  homePlanet : 'Earth',
+  color : 'silver'
+};
+
+let paintIt = obj => {
+  obj.color = 'glorious gold'
+};
+
+paintIt(spaceship);
+
+spaceship.color // Returns 'glorious gold'
+
+Fungsi kami paintIt() secara permanen mengubah warna spaceship objek kami . Namun, penugasan ulang spaceship variabel tidak akan berfungsi dengan cara yang sama:
+
+let spaceship = {
+  homePlanet : 'Earth',
+  color : 'red'
+};
+let tryReassignment = obj => {
+  obj = {
+    identified : false, 
+    'transport type' : 'flying'
+  }
+  console.log(obj) // Prints {'identified': false, 'transport type': 'flying'}
+
+};
+tryReassignment(spaceship) // The attempt at reassignment does not work.
+spaceship // Still returns {homePlanet : 'Earth', color : 'red'};
+
+spaceship = {
+  identified : false, 
+  'transport type': 'flying'
+}; // Regular reassignment still works.
+
+
+Mari kita lihat apa yang terjadi pada contoh kode:
+
+Kami menyatakan spaceship objek ini dengan let. Ini memungkinkan kami menetapkan ulang ke objek baru dengan identified dan 'transport type'properti tanpa masalah.
+Ketika kami mencoba hal yang sama menggunakan fungsi yang dirancang untuk menetapkan kembali objek yang dilewatkan ke dalamnya, penugasan kembali tidak menempel (meskipun memanggil console.log()objek menghasilkan hasil yang diharapkan).
+Ketika kami melewati spaceshipfungsi itu, objmenjadi referensi ke lokasi memori spaceshipobjek, tetapi tidak ke spaceshipvariabel. Ini karena objparameter tryReassignment()fungsi adalah variabel dalam dirinya sendiri. Tubuh tryReassignment()tidak memiliki pengetahuan tentang spaceshipvariabel sama sekali!
+Ketika kita melakukan penugasan kembali di tubuh tryReassignment(), objvariabel datang untuk merujuk ke lokasi memori objek {'identified' : false, 'transport type' : 'flying'}, sementara spaceshipvariabel itu benar-benar tidak berubah dari nilai sebelumnya.
+
+
+
+
+Looping Melalui Object
+===========================
+
+for...in akan mengeksekusi blok kode yang diberikan untuk setiap properti dalam suatu objek.
+for in digunakan khusus untuk object.
+for...inakan melakukan iterasi melalui setiap elemen spaceship.crew.objek. Dalam setiap iterasi, variabel crewMemberdisetel ke salah satu spaceship.crewkunci, memungkinkan kami untuk mencatat daftar peran anggota kru dan name.
+
+
+
+let spaceship = {
+    crew: {
+    captain: { 
+        name: 'Lily', 
+        degree: 'Computer Engineering', 
+        cheerTeam() { console.log('You got this!') } 
+        },
+    'chief officer': { 
+        name: 'Dan', 
+        degree: 'Aerospace Engineering', 
+        agree() { console.log('I agree, captain!') } 
+        },
+    medic: { 
+        name: 'Clementine', 
+        degree: 'Physics', 
+        announce() { console.log(`Jets on!`) } },
+    translator: {
+        name: 'Shauna', 
+        degree: 'Conservation Science', 
+        powerFuel() { console.log('The tank is full!') } 
+        }
+    }
+}; 
+
+// Write your code below
+
+//Using for...in, iterate through the spaceship.crew object in the code editor and console.log() a list of crew roles and names in the following format: '[crew member's role]: [crew member's name]', e.g.,'chief officer: Dan'.
+for (let crewMember in spaceship.crew) {
+  console.log(`${crewMember}: ${spaceship.crew[crewMember].name}`)
+};
+
+
+
+
+
+Ulasan
+==================
+Jalan untuk pergi! Anda sedang dalam perjalanan untuk memahami mekanisme objek dalam JavaScript. Dengan membangun objek Anda sendiri, Anda akan memiliki pemahaman yang lebih baik tentang bagaimana objek built-in JavaScript bekerja juga. Anda juga dapat mulai membayangkan mengatur kode Anda menjadi objek dan memodelkan hal-hal dunia nyata dalam kode.
+
+Mari kita tinjau apa yang telah kita pelajari dalam pelajaran ini:
+-Objek menyimpan koleksi pasangan kunci-nilai .
+
+-Setiap pasangan nilai-kunci adalah properti — ketika sebuah properti adalah fungsi, ia dikenal sebagai metode.
+
+-Literal objek terdiri dari pasangan kunci-nilai yang dipisahkan koma yang dikelilingi oleh tanda kurung kurawal.
+Anda dapat mengakses, menambah atau mengedit properti di dalam objek dengan menggunakan notasi titik atau notasi braket.
+
+-Kita dapat menambahkan metode ke literal objek kita menggunakan sintaks kunci-nilai dengan ekspresi fungsi anonim sebagai nilai atau dengan menggunakan sintaks metode ES6 baru.
+
+-Kita dapat menavigasi objek yang rumit dan bersarang dengan menukar operator.
+
+--Objek dapat berubah-ubah — kita dapat mengubah properti mereka bahkan ketika mereka dideklarasikan const.
+
+-Objek dilewatkan oleh referensi - ketika kita membuat perubahan ke objek yang dilewatkan ke fungsi, perubahan itu bersifat permanen.
+
+-Kita bisa melakukan iterasi melalui objek menggunakan For...in sintaks.
