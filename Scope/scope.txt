@@ -1,0 +1,147 @@
+## Scopee
+===============
+
+Gagasan penting dalam pemrograman adalah ruang lingkup . Lingkup mendefinisikan di mana variabel dapat diakses atau dirujuk. Sementara beberapa variabel dapat diakses dari mana saja dalam suatu program, variabel lain mungkin hanya tersedia dalam konteks tertentu.
+
+Anda bisa memikirkan ruang lingkup seperti pemandangan langit malam dari jendela Anda. Setiap orang yang hidup di planet Bumi berada dalam cakupan global bintang-bintang. Bintang-bintang dapat diakses secara global . Sementara itu, jika Anda tinggal di kota, Anda dapat melihat cakrawala kota atau sungai. Kaki langit dan sungai hanya dapat diakses secara lokal di kota Anda, tetapi Anda masih dapat melihat bintang-bintang yang tersedia secara global.
+
+Selama beberapa latihan berikutnya, kita akan mengeksplorasi bagaimana ruang lingkup berhubungan dengan variabel dan mempelajari praktik terbaik untuk deklarasi variabel.
+
+##Block and Scoope
+======================
+
+Sebelum kita berbicara lebih banyak tentang ruang lingkup, pertama-tama kita perlu berbicara tentang blok .
+
+Kami telah melihat blok yang digunakan sebelumnya dalam fungsi dan ifpernyataan. Blok adalah kode yang ditemukan di dalam satu set kurung kurawal {}. Blok membantu kita mengelompokkan satu atau lebih pernyataan bersama dan berfungsi sebagai penanda struktural penting untuk kode kita.
+
+Blok kode dapat berupa fungsi, seperti ini:
+
+---> const logSkyColor = () => {
+    let color = 'blue'; 
+    console.log(color); // blue 
+    };
+
+Perhatikan bahwa fungsi tubuh sebenarnya adalah blok kode.
+
+Amati blok dalam if pernyataan:
+
+if (dusk) {
+  let color = 'pink';
+  console.log(color); // pink
+};
+
+
+##Global Scoope
+=====================
+Lingkup adalah konteks di mana variabel kita dideklarasikan. Kami berpikir tentang ruang lingkup dalam kaitannya dengan blok karena variabel dapat ada di luar atau di dalam blok ini.
+
+Dalam lingkup global , variabel dinyatakan di luar blok. Variabel-variabel ini disebut variabel global . Karena variabel global tidak terikat di dalam blok, mereka dapat diakses oleh kode apa pun dalam program, termasuk kode dalam blok.
+
+Mari kita lihat contoh ruang lingkup global:
+
+----> const color = 'blue'
+      const returnSkyColor = () => {
+        return color; // blue 
+      };
+
+      console.log(returnSkyColor()); // blue
+
+Meskipun color variabel didefinisikan di luar blok, ia dapat diakses di blok fungsi, memberinya lingkup global.
+
+Pada gilirannya, color dapat diakses di dalam return SkyColorblok fungsi.
+
+## Block And Scoope
+==========================
+Konteks selanjutnya yang akan kita bahas adalah ruang lingkup blok . Ketika suatu variabel didefinisikan di dalam suatu blok, itu hanya dapat diakses ke kode di dalam kurung kurawal {}. Kami mengatakan bahwa variabel memiliki cakupan blok karena hanya dapat diakses ke baris kode di dalam blok itu.
+
+Variabel yang dideklarasikan dengan lingkup blok dikenal sebagai variabel lokal karena mereka hanya tersedia untuk kode yang merupakan bagian dari blok yang sama.
+
+Lingkup blok berfungsi seperti ini:
+
+===> const logSkyColor = () => {
+  let color = 'blue'
+  console.log(color); // blue 
+};
+
+logSkyColor(); // blue 
+console.log(color); // ReferenceError
+
+Anda akan melihat:
+
+-Kami mendefinisikan suatu fungsi logSkyColor().
+
+-Di dalam fungsi, color variabel hanya tersedia di dalam kurung kurawal fungsi.
+
+-Jika kami mencoba mencatat variabel yang sama di luar fungsi, lemparkan a ReferenceError.
+
+
+## Polusi Lingkup
+========================
+Ini mungkin tampak seperti ide bagus untuk selalu membuat variabel Anda dapat diakses, tetapi memiliki terlalu banyak variabel global dapat menyebabkan masalah dalam suatu program.
+
+Ketika Anda mendeklarasikan variabel global, mereka pergi ke namespace global . Ruang nama global memungkinkan variabel dapat diakses dari mana saja dalam program ini. Variabel-variabel ini tetap ada sampai program selesai yang berarti namespace global kita dapat terisi dengan sangat cepat.
+
+Polusi lingkup adalah ketika kita memiliki terlalu banyak variabel global yang ada di ruang nama global, atau ketika kita menggunakan kembali variabel di berbagai cakupan. Polusi ruang lingkup membuatnya sulit untuk melacak variabel-variabel kami yang berbeda dan mengatur kami untuk kemungkinan kecelakaan. Sebagai contoh, variabel-variabel yang dicakup secara global dapat bertabrakan dengan variabel-variabel lain yang memiliki cakupan yang lebih lokal, menyebabkan perilaku tak terduga dalam kode kami.
+
+Mari kita lihat contoh polusi ruang lingkup dalam praktiknya sehingga kita tahu bagaimana cara menghindarinya:
+
+--->
+let num = 50;
+
+const logNum = () => {
+  num = 100; // Take note of this line of code
+  console.log(num);
+};
+
+logNum(); // Prints 100
+console.log(num); // Prints 100
+
+Anda akan melihat:
+
+Kami memiliki variabel num.
+Di dalam fungsi tubuh logNum(), kami ingin mendeklarasikan variabel baru tetapi lupa menggunakan letkata kunci.
+Saat kami menelepon logNum(), numdipindahkan ke 100.
+Penugasan kembali di dalam logNum()mempengaruhi variabel global num.
+Meskipun penugasan kembali diizinkan dan kami tidak akan mendapatkan kesalahan, jika kami memutuskan untuk menggunakannya numnanti, kami tanpa sadar akan menggunakan nilai baru num.
+Meskipun penting untuk mengetahui apa ruang lingkup global, praktik terbaik untuk tidak mendefinisikan variabel dalam ruang lingkup global.
+
+## Practice Good Scoping
+===========================
+Mengingat tantangan dengan variabel global dan pencemaran ruang lingkup, kita harus mengikuti praktik terbaik untuk pelingkupan variabel kita seketat mungkin menggunakan ruang lingkup blok.
+
+Mencakup variabel Anda dengan ketat akan sangat meningkatkan kode Anda dalam beberapa cara:
+
+-Ini akan membuat kode Anda lebih mudah dibaca karena blok akan mengatur kode Anda menjadi bagian-bagian terpisah.
+
+-Itu membuat kode Anda lebih mudah dipahami karena mengklarifikasi variabel mana yang dikaitkan dengan bagian-bagian berbeda dari program daripada harus melacaknya baris demi baris!
+
+-Lebih mudah untuk mempertahankan kode Anda, karena kode Anda akan modular.
+
+-Ini akan menghemat memori dalam kode Anda karena akan tidak ada lagi setelah blok selesai berjalan.
+
+Berikut ini contoh lain cara menggunakan ruang lingkup blok, seperti yang didefinisikan dalam sebuah ifblok:
+
+--->
+const logSkyColor = () => {
+  const dusk = true;
+  let color = 'blue'; 
+  if (dusk) {
+    let color = 'pink';
+    console.log(color); // pink
+  }
+  console.log(color); // blue 
+};
+
+console.log(color); // ReferenceError
+
+Di sini, Anda akan melihat:
+
+--Kami membuat variabel duskdi dalam logSkyColor()fungsi.
+
+--Setelah if pernyataan, kami mendefinisikan blok kode baru dengan {}. Di sini kita memberikan nilai baru ke variabel color jika
+
+--Di dalam if blok, color variabel menyimpan nilainya 'pink', meskipun di luar if blok, di badan fungsi, color variabel menyimpan nilainya 'blue'. 
+
+--Meskipun kami menggunakan ruang lingkup blok, kami masih mencemari namespace kami dengan menggunakan kembali nama variabel yang sama dua kali. Praktik yang lebih baik adalah mengubah nama variabel di dalam blok.
+
+Cakupan blok adalah alat yang ampuh dalam JavaScript, karena memungkinkan kita untuk menentukan variabel dengan presisi, dan tidak mencemari namespace global. Jika suatu variabel tidak perlu ada di luar blok — seharusnya tidak!
