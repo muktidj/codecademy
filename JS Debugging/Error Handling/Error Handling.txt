@@ -1,0 +1,125 @@
+Introduction to Error Handling
+===========================
+
+Ada dua kategori kesalahan pemrograman: yang tidak mencegah kode kami berjalan dan yang lainnya.
+
+Terkadang, kami telah menulis kode yang berhasil mengembalikan nilai tetapi nilai yang berbeda dari yang kami harapkan. Program kami terus berjalan, dan kami bahkan mungkin tidak menyadari ada kesalahan sampai nanti. Ini seperti membuat sup dan secara tidak sengaja menambahkan gula, bukan garam. Pada akhirnya kita masih memiliki sup, tetapi mungkin bukan sup yang ingin kita makan. Kami tidak akan fokus pada kesalahan ini.
+
+Sebaliknya, kita akan fokus pada kesalahan yang muncul ketika kita telah menulis kode yang menyebabkan program kita berhenti berjalan, misalnya mencoba menetapkan ulang suatu constvariabel. Alih-alih mengembalikan apa pun, program kami tidak akan mengeksekusi kode lagi di mana kesalahan terjadi. Misalnya, bagaimana jika kami mencoba memindahkan sup kami ke meja tetapi menjatuhkannya karena terlalu panas? Kemudian proses pembuatan sup kami selesai— tidak akan ada sup.
+
+Kami tidak selalu dapat menghentikan kesalahan sebelum terjadi, tetapi kami dapat menyertakan rencana cadangan dalam program kami untuk mengantisipasi dan menanggapi kesalahan untuk memastikan bahwa program kami terus berjalan. Penanganan kesalahan adalah proses mengantisipasi dan mengatasi kesalahan secara terprogram. Dalam JavaScript, kami menangani kesalahan menggunakan kata kunci trydan catch. Kami trymemindahkan sup ke meja, memastikan ada seseorang atau sesuatu di dekatnya ke catchsup jika kami menjatuhkannya.
+
+Dalam pelajaran ini kita akan belajar lebih banyak tentang kesalahan dan cara membuat rencana cadangan untuk memungkinkan program kita untuk terus berjalan. Saat Anda siap, mari kita coba untuk menangani kesalahan JavaScript ini!
+
+
+Kesalahan Runtime (Runtime Error)
+========================
+
+Kesalahan berisi pesan berguna yang memberi tahu kami mengapa program kami tidak berfungsi atau mengapa kesalahan dilemparkan . Ketika kesalahan dilemparkan, program kami berhenti berjalan dan konsol menampilkan teks merah dari pesan kesalahan seperti:
+
+
+Ketika kami mengeksekusi kode dan satu baris kode melempar(throw) kesalahan, kesalahan itu disebut sebagai kesalah an runtime . Dalam JavaScript, ada objek kesalahan bawaan yang memiliki name dan message properti yang memberi tahu kami apa yang salah. Contoh kesalahan runtime bawaan meliputi:
+
+ReferenceError: ketika variabel atau fungsi tidak dapat ditemukan.
+TypeError: ketika suatu nilai bukan tipe yang valid, lihat contoh di bawah ini:
+
+const reminder = 'Reduce, Reuse, Recycle';
+
+reminder = 'Save the world';
+// TypeError: Assignment to constant variable.
+
+console.log('This will never be printed!');
+
+Dalam contoh di atas, ketika kami mencoba untuk menetapkan ulang variabel konstan reminder, TypeError dilemparkan. Kode yang ditulis setelah kesalahan runtime yang dilemparkan tidak akan dievaluasi, sehingga console.log()pernyataan itu tidak akan dievaluasi.
+
+Mari kita lihat sendiri apa yang terjadi ketika kesalahan runtime dilemparkan.
+
+
+lihat runtimeError.js
+
+
+Constructing an Error
+=====================
+
+Kesalahan JavaScript adalah objek yang memiliki properti nama dan pesan. Sebelumnya, kita telah melihat bagaimana kesalahan bawaan mengingatkan kita tentang kesalahan umum dalam kode kita. Tetapi, bagaimana jika kita membutuhkan pesan kesalahan yang tidak tercakup oleh kesalahan bawaan? Katakanlah kita perlu memberi tahu pengguna bahwa string yang diteruskan sebagai argumen terlalu pendek dengan pesan khusus. Pesan semacam itu tidak tercakup oleh kesalahan bawaan, tetapi kita bisa menggunakan Errorfungsi untuk membuat objek kesalahan kita sendiri dengan pesan yang unik untuk program kita!
+
+console.log(Error('Your password is too weak.'));
+// Prints: Error: Your password is too weak.
+The Error Fungsi membawa argumen dari string yang menjadi nilai kesalahan ini message properti. Dalam cuplikan kode di atas, kami menggunakan Error fungsi untuk membuat objek kesalahan yang memiliki pesan 'Your password is too weak.'.
+
+Anda mungkin juga melihat kesalahan yang dibuat dengan new kata kunci. Kedua metode ini akan menghasilkan fungsi yang sama. Lihatlah:
+
+console.log(new Error('Your password is too weak.'));
+// Prints: Error: Your password is too weak.
+
+Ingatlah bahwa membuat kesalahan tidak sama dengan melempar(throw) kesalahan. Kesalahan yang dilemparkan aka n menyebabkan program berhenti berjalan. Kami membahas cara melempar(throw) kesalahan yang kami buat pada latih an berikutnya!
+
+lihat ConstructingError.js
+
+
+The throw Keyword
+===================
+
+Membuat kesalahan tidak menyebabkan program kami berhenti - ingat, kesalahan harus dilakukan untuk menghentikan program.
+
+Untuk melempar(throw) kesalahan dalam JavaScript, kami menggunakan throw kata kunci seperti:
+
+throw Error('Something wrong happened');
+// Error: Something wrong happened
+
+Ketika kami menggunakan throw kata kunci, kesalahan dilemparkan dan kode demi throw pernyataan tidak akan dieksekusi. Ambil contoh:
+
+throw Error('Something wrong happened');
+// Error: Something wrong happened
+
+console.log('This will never run');
+
+Setelah throw Error('Something wrong happened');dieksekusi dan objek kesalahan dilempar, console.log()pernyataan tidak akan berjalan (seperti ketika kesalahan JavaScript bawaan dilempar!).
+
+Dalam pelajaran selanjutnya kita akan membahas bagaimana menangani kesalahan sehingga sisa kode kita dapat berjalan!
+
+
+
+The try...catch Statement
+======================
+
+Hingga saat ini, kesalahan yang dilemparkan telah menyebabkan program kami berhenti berjalan. Namun, kami memiliki kemampuan mengantisipasi dan menangani kesalahan ini dengan menulis kode untuk mengatasi kesalahan tersebut dan memungkinkan program kami untuk terus berjalan.
+
+Dalam JavaScript, kami menggunakan try...catch pernyataan untuk mengantisipasi dan menangani kesalahan. Lihatlah contoh di bawah ini:
+
+try {
+  throw Error('This error will get caught');
+} catch (e) {
+  console.log(e);
+}
+// Prints: This error will get caught
+
+console.log('The thrown error that was caught in the try...catch statement!');
+// Prints: 'The thrown error that was caught in the try...catch statement!'
+
+
+lihat tryCatch.js
+
+
+Handling with try...catch
+==========================
+
+Dalam latihan sebelumnya kami menemukan kesalahan yang kami lemparkan, tetapi kami juga dapat menggunakan try...catch pernyataan untuk menangani kesalahan bawaan yang dilemparkan oleh mesin JavaScript yang membaca dan mengevaluasi kode kami.
+
+const someVar = 'Cannot be reassigned';
+try {
+  someVar = 'Still going to try';
+} catch(e) {
+  console.log(e);
+}
+// Prints: TypeError: Assignment to constant variable.
+
+Dalam contoh di atas, kami tidak menggunakan throwkata kunci untuk melemparkan kesalahan khusus, melainkan kami mencoba menetapkan ulang const variabel dan TypeError dilemparkan. Kemudian, di catch blok , mencatat kesalahan ke konsol.
+
+Menggunakan try...catch pernyataan untuk kesalahan JavaScript bawaan sangat bermanfaat ketika kita perlu menggunakan data dari sumber eksternal yang tidak ditulis langsung di program kami.
+
+Katakanlah kita berharap untuk mengambil array dari basis data tetapi informasi yang kita dapatkan adalah sebuah string. Dalam program kami, kami dapat memiliki fungsi yang hanya berfungsi pada array. Jika fungsi itu dipanggil dengan string bukannya array kita akan mendapatkan kesalahan dan program kita akan berhenti berjalan!
+
+Namun, kami dapat menggunakan try...catch pernyataan untuk menangani kesalahan yang dilemparkan bagi kami yang memungkinkan program kami untuk terus berjalan dan kami menerima pesan mengetahui apa yang salah! Mari kita lihat bagaimana kita dapat mengimplementasikan ini dalam kode kita.
+
+lihat handlingTrycatch.js

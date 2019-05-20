@@ -1,0 +1,167 @@
+Setiap programmer akan memberi tahu Anda bahwa sangat umum untuk membuat kemajuan besar melalui masalah koding ketika tiba-tiba kesalahan seperti ini terjadi pada Anda:
+
+/home/ccuser/workspace/learn-javascript-debugging-code/app.js:1
+"my_name".capitalize();
+          ^
+
+TypeError: "my_name".capitalize is not a function
+...
+Atau, Anda mungkin akhirnya selesai menerapkan fungsi kompleks hanya untuk menemukan itu tidak berfungsi sama sekali seperti yang Anda harapkan:
+
+console.log('The square root of 4 is ' + squareRoot(4));
+=> 'The square root of 4 is 1.87878787'
+
+
+Jika hal-hal ini terjadi pada Anda, jangan khawatir! Dalam artikel kami Berpikir Tentang Kesalahan Berbeda dalam Kode Anda, Anda menemukan bahwa pengalaman ini normal untuk semua pengembang, tidak peduli seberapa berpengalaman mereka. Keterampilan kunci yang dimiliki pengembang adalah mengetahui cara men-debug kode mereka ketika masalah terjadi.
+
+Pelajaran ini akan dibangun berdasarkan artikel itu, menunjukkan bagaimana menerapkan keterampilan tersebut dalam situasi JavaScript kehidupan nyata. Jika Anda belum memiliki kesempatan untuk membaca artikel tersebut, kami sangat menyarankan Anda untuk melakukannya sekarang.
+
+Baiklah, apakah Anda siap untuk memulai transisi Anda dari coder frustrasi ke bug squasher yang luar biasa? Ayo mulai!
+
+
+Error Stack Traces(Jejak Tumpukan(stack) Kesalahan)
+==============
+
+Kami akan memulai pelajaran ini dengan melihat lebih dekat cara paling mudah untuk mengetahui kode Anda tidak berfungsi seperti yang diharapkan: kesalahan!
+
+Anda mungkin mengenali kesalahan sebagai teks merah menakutkan yang muncul di layar saat Anda mencoba menjalankan kode rusak. Sepotong perangkat lunak, yang disebut kompiler , sedang mencoba menerjemahkan kode Anda sehingga komputer Anda dapat memahami dan menjalankannya. Namun, kompiler menemukan sepotong kode yang tidak dapat ditafsirkan. Sebagai hasilnya, ia mengembalikan kesalahan kepada Anda untuk memberi tahu Anda bahwa itu harus dihentikan dan mengapa.
+
+Informasi ini dicatat sebagai jejak tumpukan(stack) kesalahan - pesan tercetak yang berisi informasi tentang di mana kesalahan terjadi, jenis kesalahan apa yang dilemparkan, dan deskripsi kesalahan.
+
+Lihatlah diagram di sebelah kanan untuk melihat di mana Anda dapat menemukan semua informasi ini.
+
+Sebagai seorang programmer baru, mudah untuk melihat kesalahan dan diatasi dengan rasa takut dan keraguan diri. Namun, Anda akan segera menyadari, kesalahan adalah jenis bug terbaik yang dapat Anda harapkan, karena kesalahan tersebut memberi tahu Anda apa yang salah dan di mana.
+
+
+Read Error Stack Trace (Membaca Kesalahan Stack Traces)
+==========================
+
+Sekarang kita tahu informasi apa yang bisa kita dapatkan dari jejak tumpukan(stack) kesalahan, mari kita lihat sebuah contoh.
+
+/home/ccuser/workspace/learn-javascript-debugging-code/app.js:1
+myVariable;
+^
+
+ReferenceError: myVariable is not defined
+...
+Menggunakan jejak tumpukan(stack) ini, mari kita jawab tiga pertanyaan yang harus Anda tanyakan pada diri sendiri setiap kali Anda ingin men-debug kesalahan:
+
+
+-Pada baris apa kesalahan itu terjadi? Anda hampir selalu dapat menemukan informasi ini di baris pertama jejak tumpukan(stack) dalam format berikut <file path>/<file name>:<line number>. Dalam contoh ini, lokasinya adalah app.js:1. Ini berarti bahwa kesalahan dilemparkan ke file bernama app.jsonline 1.
+
+-Jenis kesalahan apa yang dilemparkan? Kata pertama pada baris kelima dari jejak stack adalah jenis kesalahan yang dilemparkan. Dalam hal ini, jenis kesalahannya adalah ReferenceError. Kami akan membahas jenis kesalahan ini pada latihan berikutnya.
+
+-Apa pesan kesalahannya? Sisa dari baris kelima setelah jenis kesalahan memberikan pesan kesalahan, menjelaskan apa yang salah. Dalam hal ini, uraiannya adalah myVariable is not defined.
+
+ berfokus hanya pada baris pertama dan kelima dari jejak tumpukan(stack) kesalahan Anda.
+
+
+JavaScript Error Types
+======================
+
+Sekarang Anda dapat mengidentifikasi jenis kesalahan dari jejak tumpukan(stack) kesalahan, Anda mungkin bertanya-tanya apa arti berbagai jenis kesalahan.
+
+Berikut adalah tiga jenis kesalahan umum:
+
+1.SyntaxError : Kesalahan ini akan dilemparkan ketika salah ketik membuat kode tidak valid - kode yang tidak dapat ditafsirkan oleh kompiler. Ketika kesalahan ini terjadi, pindai kode Anda untuk memastikan Anda membuka dan menutup semua tanda kurung, tanda kurung, dan tanda kurung dengan benar dan Anda tidak menyertakan tanda titik koma yang tidak valid.
+
+
+ReferenceError : Kesalahan ini akan dilemparkan jika Anda mencoba menggunakan variabel yang tidak ada. Ketika kesalahan ini dilemparkan, pastikan semua variabel dideklarasikan dengan benar.
+
+
+TypeError : Kesalahan ini akan dilemparkan jika Anda mencoba melakukan operasi pada nilai dari jenis yang salah. Misalnya, jika kami mencoba menggunakan metode string pada angka, itu akan melempar TypeError.
+
+Ada tujuh jenis kesalahan JavaScript bawaan secara total. Anda dapat menemukan informasi lebih lanjut tentang semuanya di
+
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error
+
+
+Debugging Errors
+=================
+
+Berikut adalah proses untuk secara efisien menangani kesalahan kode Anda satu per satu:
+
+-Jalankan kode Anda. Menggunakan jejak tumpukan kesalahan pertama, mengidentifikasi jenis kesalahan, deskripsi, dan lokasi.
+
+-Pergi ke nama file dan nomor baris yang ditunjukkan oleh jejak tumpukan kesalahan. Dengan menggunakan jenis kesalahan dan deskripsi, identifikasi bug dalam kode Anda.
+
+-Perbaiki bug dan jalankan kembali kode Anda.
+Ulangi langkah 1-3 hingga kode Anda tidak lagi menampilkan kesalahan.
+
+Meskipun langkah-langkah ini mungkin tampak sederhana, mudah untuk kewalahan dengan kesalahan dalam praktiknya. Dengan menggunakan langkah-langkah ini, Anda dapat mengatasi kesalahan Anda satu per satu dan segera kode Anda akan bebas dari kesalahan.
+
+
+
+Locating Silent Bugs(Menemukan Bug Senyap)
+=========================
+
+
+Kesalahan yang dilemparkan oleh komputer sangat berguna karena mereka mengidentifikasi jenis bug dan lokasi untuk Anda segera. Namun, bahkan jika kode Anda berjalan bebas dari kesalahan, itu belum tentu bebas bug.
+
+Anda mungkin menemukan bahwa kode Anda secara konsisten mengembalikan nilai yang salah tanpa menimbulkan kesalahan. Kurangnya kesalahan yang dilemparkan tidak berarti logika kode Anda sepenuhnya benar.
+
+Sebuah alat yang sangat kuat untuk mencari bug adalah metode kemungkinan Anda pelajari sangat awal dalam perjalanan JavaScript Anda: console.log()!
+
+Dengan menambahkan pernyataan cetak ke kode kami, kami dapat mengidentifikasi kesalahan yang terjadi.
+
+Mari coba gunakan console.log()untuk melakukan debugging.'
+
+
+lihat silentBug.js
+
+
+Debugging with console.log()
+===================
+
+Mari kita sintesiskan alur kerja kita dari latihan sebelumnya menjadi satu set langkah debug yang dapat digunakan kembali.
+
+Pergi ke awal kode yang tidak berfungsi. Cetak semua variabel awal, nilai yang ada, dan argumen menggunakan console.log (). Jika nilainya seperti yang Anda harapkan, lanjutkan ke bagian logika berikutnya dalam kode. Jika tidak, Anda telah mengidentifikasi bug dan harus lompat ke langkah 3.
+Setelah potongan logika berikutnya dalam kode Anda, tambahkan pernyataan console.log () untuk memastikan variabel yang diperbarui memiliki nilai yang sekarang Anda harapkan dan bahwa blok kode sedang dieksekusi. Jika logika itu dijalankan dengan benar, terus ulangi langkah ini sampai Anda menemukan garis tidak berfungsi seperti yang diharapkan, kemudian pindah ke langkah 3.
+Perbaiki bug yang diidentifikasi dan jalankan kembali kode Anda. Jika sekarang berfungsi seperti yang diharapkan, Anda telah selesai men-debug! Jika tidak, lanjutkan melangkah melalui kode Anda menggunakan langkah 2 sampai benar.
+Ini mungkin tampak seperti banyak pencetakan, tetapi begitu Anda masuk ke rutinitasnya, itu akan jauh lebih cepat daripada mencoba menatap kode Anda sampai Anda menemukan bug Anda. Mari kita coba proses debugging ini lagi dalam praktik.
+
+
+lihat debuging with console.js
+
+
+Finding Documentation
+========================
+
+repeat()Metode membangun dan mengembalikan string baru yang berisi jumlah tertentu salinan string yang itu disebut, concatenated bersama-sama.
+
+lihat stringRepeat.js
+
+
+Stack Overflow
+======================
+
+Pada titik ini, Anda mungkin berpikir untuk diri sendiri, dokumentasi itu bagus dan semuanya, tetapi tidak ada cara itu akan menyelesaikan semua masalah saya! Dan kami sepenuhnya setuju. Semua bahasa pemrograman memiliki masalah yang sulit dan kasus tepi aneh yang muncul tiba-tiba dan kadang-kadang mustahil untuk diselesaikan sendiri.
+
+Jika Anda pernah terjebak mencoba menyelesaikan masalah pengkodean, kami sangat menyarankan Anda ke Google untuk mencari solusinya. Salah satu situs terbaik yang akan Anda lihat muncul dalam hasil pencarian adalah Stack Overflow .
+
+Stack Overflow adalah forum tanya jawab di mana programmer yang frustrasi memposting masalah dan programmer lain mendiskusikan dan memilih solusi. Hampir selalu jika Anda memiliki masalah, Stack Overflow punya jawabannya.
+
+Misalnya, Anda bingung mencoba menulis fungsi alfabet. Jika Anda mencari "abjad JavaScript string" di Google, hasil pencarian Stack Overflow ini akan muncul. Anda dapat dengan cepat memindai jawaban untuk melihat jawaban mana yang cocok untuk Anda.
+
+Jika Anda pernah memprogram dan masalah menjadi sangat sulit diatasi sehingga Anda ingin berhenti, Stack Overflow adalah tempat yang tepat untuk melepaskan diri.
+
+
+
+Ulasan Debugging
+===========================
+
+Anda baru saja belajar banyak teknik untuk membantu Anda melepaskan diri dari semua situasi debugging. Selamat! Mari kita sintesiskan semua yang Anda pelajari menjadi satu proses debugging.
+
+-Apakah kesalahan melempar kode Anda? Jika demikian, baca jejak tumpukan kesalahan untuk jenis, deskripsi, dan lokasi kesalahan. Pergi ke lokasi kesalahan dan coba perbaiki.
+
+-Apakah kode Anda rusak tetapi tidak melempar kesalahan? Telusuri kode Anda menggunakan console.log()pernyataan. Ketika hasil yang tidak terduga terjadi, mengisolasi bug dan mencoba memperbaikinya.
+
+-Apakah Anda menemukan bug menggunakan langkah 1 dan 2, tetapi tidak dapat memperbaiki bug? Konsultasikan dokumentasi untuk memastikan Anda menggunakan semua fungsi JavaScript dengan benar. 
+
+Jika Anda masih macet, Google masalah Anda dan konsultasikan Stack Overflow untuk bantuan. Baca solusi atau kirim pertanyaan Stack Overflow Anda sendiri jika tidak ada topik.
+Mungkin butuh waktu dan latihan, tetapi ini adalah cara semua pengembang mengatasi masalah mereka, jadi jangan menyerah, dan Anda akan menjadi ahli dalam waktu singkat.
+
+Selamat lagi untuk mempelajari semua teknik baru ini. Mari kita beri mereka satu putaran latihan lagi sehingga Anda dapat melihat seberapa banyak kemajuan yang telah Anda capai!
+
+
+lihat debugginReview.js
