@@ -1,0 +1,294 @@
+Introduction
+========
+
+Seringkali dalam pengembangan web, kita perlu menangani(handle) tindakan asinkron — tindakan yang bisa kita tunggu sambil beralih ke tugas lain. Kami membuat permintaan ke jaringan, basis data, atau sejumlah operasi serupa. JavaScript adalah non-pemblokiran(non-blocking): alih-alih menghentikan eksekusi kode saat menunggu, JavaScript menggunakan event-loop yang memungkinkannya mengeksekusi tugas-tugas lain secara efisien sambil menunggu penyelesaian tindakan asinkron ini.
+
+Awalnya, JavaScript menggunakan fungsi panggil balik(callback) untuk menangani(handle) tindakan asinkron. Masalah dengan callback adalah mereka mendorong kode bersarang rumit yang dengan cepat menjadi sulit untuk dibaca, debug, dan skala. Dengan ES6, JavaScript mengintegrasikan promise-promise asli yang memungkinkan kami untuk menulis kode yang lebih mudah dibaca secara signifikan. JavaScript terus membaik, dan ES8 menyediakan sintaks baru untuk menangani tindakan asinkron,yaitu async...await,. The async...await sintaks memungkinkan kita untuk menulis kode asynchronous yang berbunyi mirip dengan sinkron tradisional, program-program penting.
+
+The async...await adalah sintaks sintaksis gulaar(syntactic sug) - tidak memperkenalkan fungsionalitas baru ke dalam bahasa, melainkan memperkenalkan sintaks baru untuk menggunakan promise-promise dan generator . Keduanya sudah dibangun ke bahasa. Meskipun demikian, async...await sangat meningkatkan keterbacaan dan skalabilitas kode kami. Mari belajar bagaimana menggunakannya!
+
+lihat Introduction.js
+
+
+The async Keyword
+================
+
+Kata async kunci digunakan untuk menulis fungsi yang menangani tindakan asinkron. Kami membungkus logika asinkron kami di dalam fungsi yang diawali dengan async kata kunci. Kemudian, kita memanggil fungsi itu.
+
+async function myFunc() {
+  // Function body here
+};
+
+myFunc();
+
+Kami akan menggunakan async deklarasi fungsi di seluruh pelajaran ini, tetapi kami juga dapat membuat async ekspresi fungsi:
+
+const myFunc = async () => {
+  // Function body here
+};
+
+myFunc();
+
+
+async fungsi selalu mengembalikan promise. Ini berarti kita dapat menggunakan sintaks promise tradisional, seperti .then() dan .catch() dengan async fungsi kita . Suatu async fungsi akan kembali dalam satu dari tiga cara:
+
+-Jika tidak ada yang dikembalikan dari fungsi, itu akan mengembalikan promise dengan nilai terselesaikan undefined.
+
+-Jika ada nilai non-promise yang dikembalikan dari fungsi, itu akan mengembalikan promise yang diselesaikan untuk nilai itu.
+
+-Jika promise dikembalikan dari fungsi, itu hanya akan mengembalikan promise itu
+
+async function fivePromise() { 
+  return 5;
+}
+
+fivePromise()
+.then(resolvedValue => {
+    console.log(resolvedValue);
+  })  // Prints 5
+
+Dalam contoh di atas, meskipun kita kembali 5 ke dalam fungsi tubuh, apa yang sebenarnya dikembalikan ketika kita memohon fivePromise() adalah promise dengan nilai penyelesaian 5.
+
+Mari kita menulis sebuah async fungsi!
+
+lihat app.js
+
+
+The await Operator
+================
+
+Pada latihan terakhir, kami membahas async kata kunci. Dengan sendirinya, itu tidak berbuat banyak; async fungsi hampir selalu digunakan dengan kata kunci tambahan await di dalam tubuh fungsi.
+
+Kata await kunci hanya dapat digunakan di dalam suatu async fungsi. await adalah operator: itu mengembalikan nilai yang diPromisekan dari Promise. Karena Promise terselesaikan dalam jumlah waktu, await penghentian, atau jeda yang tidak ditentukan , pelaksanaan async fungsi kita sampai Promise yang diberikan terselesaikan.
+
+Dalam sebagian besar situasi, kita berhadapan dengan Promise yang dikembalikan dari fungsi. Secara umum, fungsi-fungsi ini melalui perpustakaan, dan, dalam pelajaran ini, kami akan menyediakannya. Kita dapat await menyelesaikan Promise yang dikembalikan dalam suatu async fungsi. Dalam contoh di bawah ini, myPromise()adalah fungsi yang mengembalikan Promise yang akan diselesaikan ke string "I am resolved now!".
+
+async function asyncFuncExample(){
+
+      async function asyncFuncExample(){
+  let resolvedValue = await myPromise();
+  console.log(resolvedValue);
+}
+
+asyncFuncExample(); // Prints: I am resolved now!
+
+Dalam async fungsi kami asyncFuncExample(),, kami gunakan await untuk menghentikan eksekusi kami sampai myPromise() diselesaikan dan menetapkan nilainya yang telah diselesaikan ke variabel resolvedValue. Kemudian kita masuk resolvedValueke konsol. Kami dapat menangani logika untuk promise dengan cara yang berbunyi seperti kode sinkron.
+
+lihat await.js and library.js
+
+
+Writing async Functions
+==================
+
+Kami telah melihat bahwa await kata kunci menghentikan eksekusi suatu async fungsi sampai suatu promise tidak lagi tertunda. Jangan lupa await kata kunci! Ini mungkin tampak jelas, tetapi ini bisa menjadi kesalahan yang sulit untuk ditangkap karena fungsi kita masih akan berjalan — tidak akan mendapatkan hasil yang diinginkan.
+
+Kita akan mengeksplorasi ini menggunakan fungsi berikut, yang mengembalikan promise yang resolve 'Yay, I resolved!'setelah penundaan 1 detik:
+
+let myPromise = () => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve('Yay, I resolved!')
+    }, 1000);
+  });
+}
+Sekarang kita akan menulis dua async fungsi yang memanggil myPromise():
+
+async function noAwait() {
+ let value = myPromise();
+ console.log(value);
+}
+
+async function yesAwait() {
+ let value = await myPromise();
+ console.log(value);
+}
+
+noAwait(); // Prints: Promise { <pending> }
+yesAwait(); // Prints: Yay, I resolved!
+
+Di asyncfungsi pertama noAwait(),, kami mengabaikan await kata kunci sebelumnya myPromise(). Yang kedua yesAwait(), kami memasukkannya. The noAwait()Fungsi log Promise { <pending> }ke konsol. Tanpa await kata kunci, eksekusi fungsi tidak dijeda. Pada console.log()baris berikut dieksekusi sebelum promise terselesaikan.
+
+Ingat bahwa await operator mengembalikan nilai promise yang telah diselesaikan. Ketika digunakan dengan benar dalam yes Await(), variabel valueditugaskan nilai yang myPromise()dipromisekan dari promise, sedangkan di noAwait(), value ditugaskan objek promise itu sendiri.
+
+lihat beans.js and libraryBeans.js
+
+
+Handling Dependent Promises
+=================
+
+Keindahan sejati async...await adalah ketika kita memiliki serangkaian tindakan asinkron yang bergantung satu sama lain. Sebagai contoh, kami dapat membuat permintaan jaringan berdasarkan permintaan ke database. Dalam hal ini, kita harus menunggu untuk membuat permintaan jaringan sampai kita mendapatkan hasil dari database. Dengan sintaks promise asli, kami menggunakan serangkaian .then() fungsi yang memastikan masing-masing kembali dengan benar:
+
+function nativePromiseVersion() {
+    returnsFirstPromise()
+    .then((firstValue) => {
+        console.log(firstValue);
+        return returnsSecondPromise(firstValue);
+    })
+   .then((secondValue) => {
+        console.log(secondValue);
+    });
+}
+
+Mari kita uraikan apa yang terjadi dalam nativePromiseVersion() fungsi:
+
+-Dalam fungsi kami, kami menggunakan dua fungsi yang mengembalikan promise: returnsFirstPromise()dan returnsSecondPromise().
+
+-Kami memohon returnsFirstPromise() dan memastikan bahwa promise pertama resolved dengan menggunakan .then().
+Dalam callback pertama kami .then(), kami mencatat nilai yang telah dipromisekan dari promise pertama firstValue,, dan kemudian kembali returnsSecondPromise
+(firstValue).
+
+-Kami menggunakan yang lain .then()untuk mencetak nilai terselesaikan dari promise kedua ke konsol.
+
+
+Inilah cara kami menulis async fungsi untuk mencapai hal yang sama:
+
+async function asyncAwaitVersion() {
+ let firstValue = await returnsFirstPromise();
+ console.log(firstValue);
+ let secondValue = await returnsSecondPromise(firstValue);
+ console.log(secondValue);
+}
+Mari kita uraikan apa yang terjadi dalam asyncAwaitVersion()fungsi kita :
+
+
+-Kami menandai fungsi kami sebagai async.
+
+-Di dalam fungsi kami, kami membuat variabel yang firstValue = await returnsFirstPromise(). Ini berarti firstValue diberikan nilai terselesaikan dari promise yang ditunggu.Selanjutnya, kita masuk firstValue ke konsol.
+
+-Kemudian, kami membuat variabel yang secondValue = await returnsSecondPromise(firstValue). Karena itu, secondValue diberikan nilai terselesaikan(resolve) dari promise ini.
+
+-Akhirnya, kami masuk secondValueke konsol.
+
+Meskipun menggunakan async
+
+
+
+...await sintaksis dapat menghemat kita mengetik, pengurangan panjang bukan poin utama. Dengan adanya dua versi fungsi, async...await versi ini lebih mirip dengan kode sinkron, yang membantu pengembang mempertahankan dan men-debug kode mereka. The async...await sintaks juga memudahkan untuk menyimpan dan merujuk pada nilai-n
+
+
+
+ilai diselesaikan dari promise-promise lanjut kembali chain kami yang merupakan tugas yang jauh lebih sulit dengan sintaks promise asli. Mari kita buat beberapa asyncfungsi dengan banyak await pernyataan!
+
+lihat handling.js and handlingLibrary.js
+
+
+Handling Errors
+==================
+
+Ketika 
+
+
+
+.catch() digunakan dengan chain promise yang panjang, tidak ada indikasi di mana dalam chain kesal
+
+
+
+ahan itu dilemparkan. Ini dapat membuat debugging menjadi menantang.
+
+Dengan async...await, kami menggunakan try...catch pernyataan untuk Handling Errors(penangan kesalahan). Dengan menggunakan sintaks ini, kita tidak hanya dapat menangani kesalahan dengan cara yang sama kita lakukan dengan kode sinkron, tetapi kita juga dapat menangkap kesalahan sinkron dan asinkron. Ini membuat proses debug lebih mudah!
+
+async function usingTryCatch() {
+ try {
+       let resolveValue = await asyncFunction('thing that will fail');
+   let secondValue = await secondAsyncFunction(resolveValue);
+ } catch (err) {
+   // Catches any errors in the try block
+   console.log(err);
+ }
+}
+
+usingTryCatch();
+
+
+Ingat, karena async fungsi mengembalikan Promise, kita masih bisa menggunakan Promise asli .catch()dengan async fungsi
+
+async function usingPromiseCatch() {
+   let resolveValue = await asyncFunction('thing that will fail');
+}
+
+let rejectedPromise = usingPromiseCatch();
+rejectedPromise.catch((rejectValue) => {
+console.log(rejectValue);
+})
+Ini kadang-kadang digunakan dalam lingkup global untuk menangkap kesalahan akhir dalam kode kompleks.
+
+
+
+Handling Independent Promise(Menangani promise Independen)
+=========================
+
+Ingat itu await menghentikan eksekusi async fungsi kita . Ini memungkinkan kami untuk dengan mudah menulis kode gaya sinkron untuk menangani promise yang tergantung. Tetapi bagaimana jika async fungsi kita mengandung banyak promise yang tidak bergantung pada hasil satu sama lain untuk dieksekusi ?
+
+
+
+async function waiting() {
+ const firstValue = await firstAsyncThing();
+ const secondValue = await secondAsyncThing();
+ console.log(firstValue, secondValue);
+}
+
+async function concurrent() {
+ const firstPromise = firstAsyncThing();
+ const secondPromise = secondAsyncThing();
+console.log(await firstPromise, await secondPromise);
+}
+
+
+Dalam waiting()fungsi tersebut, kita menghentikan sementara fungsi kita sampai promise pertama selesai, lalu kita membangun promise kedua. Setelah itu teratasi, kami mencetak kedua nilai yang diselesaikan ke konsol.
+
+
+}
+
+Dalam concurrent() fungsi kami , kedua promise dibangun tanpa menggunakan await. Kami kemudian await masing-masing dari resolusi mereka untuk mencetaknya ke konsol.
+
+Dengan concurrent() fungsi kami, kedua operasi asinkron yang dipromisekan ini dapat dijalankan secara bersamaan. Jika memungkinkan, kami ingin segera memulai setiap operasi asinkron! Dalam asyncfungsi kita, kita harus tetap memanfaatkan concurrency , kemampuan untuk melakukan tindakan asinkron pada saat yang bersamaan.
+
+Catatan: jika kita memiliki beberapa promise yang benar-benar independen yang ingin kita jalankan sepenuhnya secara paralel, kita harus menggunakan .then() fungsi individual dan menghindari penghentian eksekusi kita await.
+
+
+
+lihat handlingErorIndependen.js and handlingErorIndependenLibrary.js
+
+
+Await Promise All
+================
+
+Cara lain untuk mengambil keuntungan dari konkurensi ketika kita memiliki banyak promise yang dapat dieksekusi secara bersamaan adalah dengan await  Promise.all().
+
+Kita bisa melewati serangkaian promise sebagai argumen Promise.all(), dan itu akan mengembalikan satu promise. promise ini akan terpecahkan ketika semua promise dalam array argumen telah diselesaikan. Nilai tekad promise ini akan berupa array yang berisi nilai yang diselesaikan dari setiap promise dari array argumen.
+
+async function asyncPromAll() {
+  const resultArray = await Promise.all([asyncTask1(), asyncTask2(), asyncTask3(), asyncTask4()]);
+  for (let i = 0; i<resultArray.length; i++){
+    console.log(resultArray[i]); 
+  }
+
+
+
+
+Dalam contoh kami di atas, kami await resolusi a Promise.all(). Ini Promise.all()dipanggil dengan array argumen yang berisi empat janji (dikembalikan dari fungsi yang diperlukan). Selanjutnya, kita mengulang resultArray, dan mencatat setiap item ke konsol. Elemen pertama resultArray adalah nilai yang asyncTask1() dijanjikan dari janji, yang kedua adalah nilai dari asyncTask2()janji, dan seterusnya.
+
+Promise.all()memungkinkan kita untuk mengambil keuntungan dari asinkronisitas — masing-masing dari empat tugas asinkron dapat memproses secara bersamaan. Promise.all() juga memiliki manfaat gagal cepat , yang berarti tidak akan menunggu sisa tindakan asinkron untuk menyelesaikan setelah ada yang ditolak. Begitu janji pertama dalam array ditolak, janji yang dikembalikan dari Promise.all()akan menolak dengan alasan itu. Seperti ketika bekerja dengan janji-janji asli, Promise.all()merupakan pilihan yang baik jika beberapa tugas asinkron semua diperlukan, tetapi tidak ada yang harus menunggu yang lain sebelum dieksekusi.
+
+
+lihat promiseAll.js
+
+
+
+Ulasan
+===============
+Pekerjaan yang luar biasa untuk memahami async...awaitsintaksis! Mari tinjau apa yang telah Anda pelajari:
+
+async...await adalah gula sintaksis yang dibangun di atas janji dan generator JavaScript asli.
+
+Kami mendeklarasikan fungsi async dengan kata kunci async.
+
+Di dalam suatu asyncfungsi, kami menggunakan awaitoperator untuk menjeda eksekusi fungsi kami sampai tindakan asinkron selesai dan 
+
+janji yang ditunggu tidak lagi tertunda.
+await mengembalikan nilai terselesaikan dari janji yang ditunggu.
+
+Kita dapat menulis banyak awaitpernyataan untuk menghasilkan kode yang bertuliskan seperti kode sinkron.
+
+Kami menggunakan try...catchpernyataan dalam asyncfungsi kami untuk penanganan kesalahan.
+Kita harus tetap memanfaatkan konkurensi dengan menulis asyncfungsi yang memungkinkan tindakan asinkron terjadi secara bersamaan bilamana memungkinkan.
